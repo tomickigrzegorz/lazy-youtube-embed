@@ -17,7 +17,7 @@ gulp.task('sass', function () {
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(cssmin())
     .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('js', function () {
@@ -26,15 +26,11 @@ gulp.task('js', function () {
     .pipe(babel({ presets: ['@babel/env'] }))
     .on('error', swallowError)
     .pipe(concat('main.min.js'))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./'));
 });
 
-gulp.task('html', function () {
-  return gulp.src('./sources/index.html').pipe(gulp.dest('./dist'));
-});
 
 gulp.task('watch', function () {
-  gulp.watch('sources/index.html', ['html', 'sass', 'js']).on('change', browserSync.reload);
   gulp.watch('sources/*.scss', ['sass']).on('change', browserSync.reload);
   gulp.watch('sources/*.js', ['js']).on('change', browserSync.reload);
 });
