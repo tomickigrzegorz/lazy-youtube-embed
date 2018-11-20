@@ -104,15 +104,15 @@ class ytLazy {
   }
 
   ytLightboxClose() {
-    const test = document.querySelector('.ytLight');
+    const ytLight = document.querySelector('.ytLight');
     window.addEventListener('keydown', event => {
       if (event.keyCode === 27) {
-        test.remove();
+        ytLight.remove();
       }
     });
     document.querySelector('.ytLight-close').addEventListener('click', event => {
       event.stopPropagation();
-      test.remove();
+      ytLight.remove();
     });
   }
 
