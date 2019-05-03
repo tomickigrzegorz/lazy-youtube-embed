@@ -1,6 +1,9 @@
+// import '@babel/polyfill';
+
 class ytLazy {
   constructor(options) {
     this.className = options.className;
+    this.ytRender();
   }
 
   ytRender() {
@@ -75,18 +78,21 @@ class ytLazy {
     getYTLazy.forEach(video => {
       video.addEventListener('click', event => {
         event.preventDefault();
-        const ytId = event.target.closest('.ytLazy__item').getAttribute('data-yt-id');
-        this.ytLightbox(ytId);
+        const ytItem = event.target.closest('.ytLazy__item');
+        const ytId = ytItem.getAttribute('data-yt-id');
+        const ytPlay = ytItem.getAttribute('data-play');
+        this.ytLightbox(ytId, ytPlay === 'true' ? '?autoplay=1' : '');
       });
     });
   }
 
-  ytLightbox(ytId) {
+  ytLightbox(ytId, ytPlay) {
+    console.log(`www.youtube.com/embed/${ytId}?autoplay=1&volume=0`);
     const imgFile = `
       <div class="ytLight-wrap">
         <div class="ytLight-container">
             <div class="ytLight-iframe">
-              <iframe src="//www.youtube.com/embed/${ytId}?autoplay=1&" frameborder="0" allowfullscreen></iframe>
+              <iframe src="//www.youtube.com/embed/${ytId}?autoplay=1" frameborder="0" allowfullscreen></iframe>
             </div>
             <button type="button" class="ytLight-close" title="Close">×</button>
         </div>
@@ -94,12 +100,9 @@ class ytLazy {
     `;
     const lightboxDiv = document.createElement('div');
     lightboxDiv.setAttribute('class', 'ytLight');
-    setTimeout(() => {
-      lightboxDiv.classList.add('is-open');
-    }, 1);
+    setTimeout(() => lightboxDiv.classList.add('is-open'), 1);
     lightboxDiv.innerHTML = imgFile;
     document.body.appendChild(lightboxDiv);
-
     this.ytLightboxClose();
   }
 
@@ -114,6 +117,7 @@ class ytLazy {
       event.stopPropagation();
       ytLight.remove();
     });
+
   }
 
 }
@@ -122,4 +126,4 @@ const options = {
   className: 'ytLazy__item'
 };
 
-document.addEventListener('DOMContentLoaded', new ytLazy(options).ytRender());
+document.addEventListener('DOMContentLoaded', new ytLazy(options));
