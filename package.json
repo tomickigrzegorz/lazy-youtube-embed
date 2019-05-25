@@ -4,21 +4,24 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "concurrently \"yarn js:build\" \"yarn sass:build\" \"yarn sass:watch\" \"yarn js:watch\" \"yarn server\"",
+    "build": "concurrently \"yarn js:build\" \"yarn sass:build\"",
+    "js:build": "babel sources/lazy.js -d build",
+    "js:watch": "babel sources/lazy.js --watch --out-dir build",
+    "sass:build": "node-sass sources/style.scss -o build",
+    "sass:watch": "node-sass --watch sources/style.scss -o build",
+    "server": "live-server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
-    "@babel/polyfill": "^7.4.4",
+    "@babel/node": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "@babel/register": "^7.4.4",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-cssmin": "^0.2.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.2"
+    "concurrently": "^4.1.0",
+    "live-server": "^1.2.1",
+    "node-sass": "^4.12.0"
   }
 }
