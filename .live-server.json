@@ -1,9 +1,10 @@
 {
   "port": 8180,
   "host": "0.0.0.0",
-  "root": "./",
+  "root": "./sources",
   "open": true,
   "file": "index.html",
+  "ignore": "html,json",
   "wait": 1000,
   "logLevel": 2
 }
