@@ -18,13 +18,41 @@
       margin: 0;
       padding: 0;
     }
+
+    .content {
+      display: grid;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .content>div {
+      flex: 1 1 25%;
+    }
+
+    @media (max-width: 900px) {
+      .content>div {
+        flex: 1 1 30%;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .content>div {
+        flex: 1 1 50%;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .content>div {
+        flex: 1 1 100%;
+      }
+    }
   </style>
   <link rel="stylesheet" href="./youtubeLazy.min.css">
 </head>
 
 <body>
 
-  <div class="ytLazy__content">
+  <div class="content">
     <div class="ytLazy__item" data-yt-type="5" data-yt-id="8fuafBkKqTc"></div>
     <div class="ytLazy__item" data-yt-type="5" data-yt-id="jSgUaM-MLNk"></div>
     <div class="ytLazy__item" data-yt-type="5" data-yt-id="9upiCtoP28o"></div>

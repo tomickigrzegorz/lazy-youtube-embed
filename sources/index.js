@@ -110,12 +110,12 @@ class ytLazy {
     const ytLight = document.querySelector('.ytLight');
     window.addEventListener('keydown', event => {
       if (event.keyCode === 27) {
-        ytLight.remove();
+        ytLight.parentNode.removeChild(ytLight);
       }
     });
     document.querySelector('.ytLight-close').addEventListener('click', event => {
       event.stopPropagation();
-      ytLight.remove();
+      ytLight.parentNode.removeChild(ytLight);
     });
 
   }

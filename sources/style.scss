@@ -6,15 +6,7 @@
 }
 
 .ytLazy {
-  &__content {
-    display: flex;
-    flex-wrap: wrap;
-    margin: auto;
-  }
-
   &__item {
-    display: inline-block;
-    width: calc(25% - 4px);
     cursor: pointer;
 
     &:hover svg {
