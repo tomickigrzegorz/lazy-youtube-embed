@@ -5,17 +5,6 @@
   --lightbox-iframe-ratio: 9/16;
 }
 
-*,
-*:after,
-*:before {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
 .ytLazy {
   &__content {
     display: flex;
@@ -61,7 +50,7 @@ body {
       z-index: 10;
       transform: translate(-50%, -50%);
       cursor: pointer;
-      fill: hsla(0, 0%, 0%, 0.7);
+      fill: hsla(0, 100%, 50%, 0.7);
       height: 90px;
       width: 69px;
 
@@ -162,35 +151,4 @@ body {
 .is-open {
   opacity: 1;
   transition: all 0.5s linear;
-}
-
-
-$colors: (grey: (base: #4d4e55,
-light: #c8c8ce),
-yellow: (base: #ffae00),
-green: (base: #00ff15));
-
-
-@mixin color-modifiers($attribute: 'color', $prefix: '-', $separator: '-', $base: 'base') {
-
-  @each $name,
-  $color in $colors {
-    &#{$prefix}#{$name} {
-
-      @each $tone,
-      $hex in $color {
-        &#{if($tone != $base, #{$separator}#{$tone},
-        '')
-      }
-
-        {
-        #{$attribute}: $hex;
-      }
-    }
-  }
-}
-}
-
-.text {
-  @include color-modifiers;
 }

@@ -1,4 +1,4 @@
-// import '@babel/polyfill';
+import './style.scss';
 
 class ytLazy {
   constructor(options) {
@@ -8,17 +8,16 @@ class ytLazy {
 
   ytRender() {
     let getYTLazy = document.querySelectorAll(`.${this.className}`);
-    getYTLazy.forEach(ytEl => {
-      let ytId = ytEl.getAttribute('data-yt-id');
-      let ytType = ytEl.getAttribute('data-yt-type');
+    for (let i = 0; i < getYTLazy.length; i++) {
+      let ytId = getYTLazy[i].getAttribute('data-yt-id');
+      let ytType = getYTLazy[i].getAttribute('data-yt-type');
       let dataYType = document.querySelector(`div[data-yt-id="${ytId}"]`);
       const imgType = this.ytImageType(parseFloat(ytType));
-      dataYType.setAttribute(
-        'style',
-        `background-image: url('//i.ytimg.com/vi/${ytId}/${imgType}'); background-repeat:no-repeat; background-size: cover; background-position: center;`
-      );
-      ytEl.innerHTML = this.ytButton();
-    });
+
+      dataYType.setAttribute('style', `background-image: url('//i.ytimg.com/vi/${ytId}/${imgType}'); background-repeat:no-repeat; background-size: cover; background-position: center;`);
+
+      getYTLazy[i].innerHTML = this.ytButton();
+    }
     this.ytTrigger();
   }
 
@@ -75,15 +74,15 @@ class ytLazy {
 
   ytTrigger() {
     let getYTLazy = document.querySelectorAll(`.${this.className}`);
-    getYTLazy.forEach(video => {
-      video.addEventListener('click', event => {
+
+    for (let i = 0; i < getYTLazy.length; i++) {
+      getYTLazy[i].addEventListener('click', event => {
         event.preventDefault();
-        const ytItem = event.target.closest('.ytLazy__item');
-        const ytId = ytItem.getAttribute('data-yt-id');
-        const ytPlay = ytItem.getAttribute('data-play');
+        const ytId = getYTLazy[i].getAttribute('data-yt-id');
+        const ytPlay = getYTLazy[i].getAttribute('data-play');
         this.ytLightbox(ytId, ytPlay === 'true' ? '?autoplay=1' : '');
-      });
-    });
+      })
+    }
   }
 
   ytLightbox(ytId, ytPlay) {
@@ -103,6 +102,7 @@ class ytLazy {
     setTimeout(() => lightboxDiv.classList.add('is-open'), 1);
     lightboxDiv.innerHTML = imgFile;
     document.body.appendChild(lightboxDiv);
+
     this.ytLightboxClose();
   }
 
@@ -122,8 +122,5 @@ class ytLazy {
 
 }
 
-const options = {
-  className: 'ytLazy__item'
-};
 
-document.addEventListener('DOMContentLoaded', new ytLazy(options));
+export default ytLazy;

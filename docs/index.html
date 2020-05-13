@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>lazy load youtube</title>
+  <style>
+    *,
+    *:after,
+    *:before {
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <link rel="stylesheet" href="./youtubeLazy.min.css">
+</head>
+
+<body>
+
+  <div class="ytLazy__content">
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="8fuafBkKqTc"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="jSgUaM-MLNk"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="9upiCtoP28o"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="vSW6PHIeYMs"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="WKXk1qZjDtI"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="s71YbAdk4cc"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="-swzejMi1ho"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="lYzQ7z2YTyI"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="3UVR8KEK3pI"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="xZqEeKdlkco"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="exrsyyby2UQ"></div>
+    <div class="ytLazy__item" data-yt-type="5" data-yt-id="DzZ7EAcR71Q"></div>
+  </div>
+
+  <script src="./youtubeLazy.min.js"></script>
+  <script>
+    const options = {
+      className: 'ytLazy__item'
+    };
+
+    document.addEventListener('DOMContentLoaded', new ytLazy(options));
+  </script>
+</body>
+
+</html>
