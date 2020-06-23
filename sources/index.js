@@ -65,7 +65,6 @@ class ytLazy {
 
   ytHexToRgb(hex, alpha) {
     const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-    console.log(hex.match(/\w\w/g).map(x => parseInt(x, 16)));
     return alpha ? `rgba(${r},${g},${b},${alpha / 100})` : `rgb(${r},${g},${b})`;
   };
 
