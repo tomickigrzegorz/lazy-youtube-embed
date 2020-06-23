@@ -32,10 +32,19 @@ data-yt-id
 ```html
 <script src="./youtubeLazy.min.js"></script>
 <script>
+  // options are optional
   const options = {
-    className: 'ytLazy__item'
+    // color in hex, default black - #000000
+    backgroundColor: '#383838',
+    // lightbox opcity, [10, 20, ...], max is 100
+    // default: 90
+    opacity: 90
   };
-  document.addEventListener('DOMContentLoaded', new ytLazy(options));
+
+  // ytLazy__item youtube class div
+  document.addEventListener('DOMContentLoaded', new ytLazy('ytLazy__item', options));
+  // or without options
+  document.addEventListener('DOMContentLoaded', new ytLazy('ytLazy__item'));
 </script>
 ```
 

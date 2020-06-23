@@ -1,8 +1,11 @@
 import './style.scss';
 
 class ytLazy {
-  constructor(options) {
-    this.className = options.className;
+  constructor(classElement, options = {}) {
+    // { backgroundColor, opacity }
+    this.className = classElement;
+    this.backgroundColor = options.backgroundColor || '#000';
+    this.opacity = options.opacity || 90;
     this.ytRender();
   }
 
@@ -60,6 +63,12 @@ class ytLazy {
     return imgType;
   }
 
+  ytHexToRgb(hex, alpha) {
+    const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
+    console.log(hex.match(/\w\w/g).map(x => parseInt(x, 16)));
+    return alpha ? `rgba(${r},${g},${b},${alpha / 100})` : `rgb(${r},${g},${b})`;
+  };
+
   ytButton() {
     return ` 
       <div class="ytLazy__thumbnail">
@@ -99,6 +108,7 @@ class ytLazy {
     `;
     const lightboxDiv = document.createElement('div');
     lightboxDiv.setAttribute('class', 'ytLight');
+    lightboxDiv.setAttribute('style', `background: ${this.ytHexToRgb(this.backgroundColor, this.opacity)}`)
     setTimeout(() => lightboxDiv.classList.add('is-open'), 1);
     lightboxDiv.innerHTML = imgFile;
     document.body.appendChild(lightboxDiv);
