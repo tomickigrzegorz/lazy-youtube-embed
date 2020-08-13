@@ -30,6 +30,8 @@ high quality | 5 | 480x360
 medium quality | 6 | 320x180
 normal quality | 0 | 120x90
 
+> close the lightbox by pressing the ESC key
+
 ## HTML configuration
 
 ```
