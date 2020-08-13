@@ -1,4 +1,3 @@
-import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 import postcss from 'rollup-plugin-postcss';
@@ -26,11 +25,6 @@ export default {
         autoprefixer(),
         cssnano(),
         cssvariables()
-      ]
-    }),
-    copy({
-      targets: [
-        { src: 'sources/index.html', dest: 'docs/' }
       ]
     }),
     (!PRODUCTION && serve({ open: true, contentBase: 'docs' })),

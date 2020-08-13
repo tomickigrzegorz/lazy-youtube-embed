@@ -1,6 +1,24 @@
-## Lazy loading youtube
+ <h1 align="center">
+  Lazy loading youtube
+ </h1>
 
-Demo <https://tomik23.github.io/lazy-youtube/>
+<p align="center">
+  Lazy loading youtube on lightbox
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/package-json/v/tomik23/lazy-youtube">
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg">
+  </a>
+</p>
+
+<p align="center">
+  <img src="static/01.png">
+</p>
+
+## Demo
+See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 
 thumbnail name | data-yt-type | size (px)
 ---- | :-------: | :-------
@@ -25,11 +43,10 @@ data-yt-type
 data-yt-id
 ```
 
+HTML
 ```html
 <div class="ytLazy__item" data-yt-type="5" data-yt-id="8fuafBkKqTc"></div>
-```
 
-```html
 <script src="./youtubeLazy.min.js"></script>
 <script>
   // options are optional
