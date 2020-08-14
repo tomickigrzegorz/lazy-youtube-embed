@@ -1,9 +1,5 @@
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
-import postcss from 'rollup-plugin-postcss';
-import autoprefixer from 'autoprefixer';
-import cssnano from 'cssnano';
-import cssvariables from 'postcss-css-variables';
 import babel from '@rollup/plugin-babel';
 import { terser } from "rollup-plugin-terser";
 
@@ -14,19 +10,14 @@ export default {
   output: {
     file: 'docs/youtubeLazy.min.js',
     format: 'iife',
-    name: 'ytLazy'
+    name: 'ytLazy',
+    sourcemap: !PRODUCTION
   },
   plugins: [
-    babel({ exclude: 'node_modules/**' }),
-    terser(),
-    postcss({
-      extract: 'youtubeLazy.min.css',
-      plugins: [
-        autoprefixer(),
-        cssnano(),
-        cssvariables()
-      ]
+    babel({
+      exclude: 'node_modules/**'
     }),
+    terser(),
     (!PRODUCTION && serve({ open: true, contentBase: 'docs' })),
     (!PRODUCTION && livereload())
   ]

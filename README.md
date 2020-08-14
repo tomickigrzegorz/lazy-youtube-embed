@@ -32,24 +32,27 @@ normal quality | 0 | 120x90
 
 > close the lightbox by pressing the ESC key
 
-## HTML configuration
+## How to configure it?
 
-```
-// class needed to run the whole process
-ytLazy__item
-
-// thumbnail size
-data-yt-type
-
-// video number
-data-yt-id
+### First, add CSS
+```HTML
+<link rel="stylesheet" href="./youtubeLazy.min.css">
 ```
 
-HTML
+### Add a div with the appropriate json
+- **"type": 5** - type of thumbnail, see table above
+- **"id": "TUIbj4mviXU"** - id is the id of the movie you can find it in every youtube link
+- **"local": true** - parameter that tells the library that the movie should play in the same div as the thumbnail, not in the lightbox
+
 ```html
-<div class="ytLazy__item" data-yt-type="5" data-yt-id="8fuafBkKqTc"></div>
+<div class="ytLazy__item" data-yt='{ "type":5, "id":"TUIbj4mviXU" }'></div>
+<div class="ytLazy__item" data-yt='{ "type":5, "id":"XHeDps0fX6c", "local": true }'></div>
+```
 
+### Add a library, configuration options that are not required and call the library
+```html
 <script src="./youtubeLazy.min.js"></script>
+
 <script>
   // options are optional
   const options = {
@@ -60,10 +63,23 @@ HTML
     opacity: 90
   };
 
-  // ytLazy__item youtube class div
+  // ytLazy__item youtube class div with options
   document.addEventListener('DOMContentLoaded', new ytLazy('ytLazy__item', options));
   // or without options
   document.addEventListener('DOMContentLoaded', new ytLazy('ytLazy__item'));
+</script>
+```
+
+## IE10+
+
+If you need IE support, add this pollyfil to html
+```html
+<script type="text/javascript">
+  if (!('Promise' in window)) {
+    var script = document.createElement("script");
+    script.src = "https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.closest";
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
 </script>
 ```
 
