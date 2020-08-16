@@ -14,7 +14,7 @@ class ytLazy {
     this.initial();
   }
 
-  initial = () => {
+  initial() {
     this.getYTLazy = document.querySelectorAll(`.${this.className}`);
 
     for (let i = 0; i < this.getYTLazy.length; i++) {
@@ -33,7 +33,7 @@ class ytLazy {
     }
   }
 
-  parseJson = (object) => {
+  parseJson(object) {
     return JSON.parse(object);
   }
 
@@ -48,7 +48,7 @@ class ytLazy {
   | Medium Quality      | 320x180   | https://i1.ytimg.com/vi/<VIDEO ID>/mqdefault.jpg |
   | Normal Quality      | 120x90    | https://i1.ytimg.com/vi/<VIDEO ID>/default.jpg   |
   */
-  imageType = type => {
+  imageType(type) {
     let imgType = '';
     switch (type) {
       case 0:
@@ -76,12 +76,12 @@ class ytLazy {
     return imgType;
   }
 
-  convertHexToRgb = (hex, alpha) => {
+  convertHexToRgb(hex, alpha) {
     const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
     return alpha ? `rgba(${r},${g},${b},${alpha / 100})` : `rgb(${r},${g},${b})`;
   };
 
-  createButtonYoutube = () => {
+  createButtonYoutube() {
     const buttonW = this.divElement.cloneNode();
     buttonW.className = 'ytLazy__thumbnail';
 
@@ -93,7 +93,7 @@ class ytLazy {
     return buttonW;
   }
 
-  createFrame = (id) => {
+  createFrame(id) {
     const frame = this.iframe.cloneNode();
     // frame.src = `//www.youtube.com/embed/${id}`;
     frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
@@ -101,7 +101,7 @@ class ytLazy {
     return frame;
   }
 
-  handleEvent = () => {
+  handleEvent() {
     document.body.addEventListener('click', event => {
       event.preventDefault();
       const { target } = event;
@@ -140,11 +140,11 @@ class ytLazy {
 
   }
 
-  removeLightbox = (element) => {
+  removeLightbox(element) {
     element.parentNode.removeChild(element);
   }
 
-  lightbox = (id) => {
+  lightbox(id) {
     const button = this.button.cloneNode();
     button.className = 'ytLight-close';
     button.setAttribute('type', 'button');

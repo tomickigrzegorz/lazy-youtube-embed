@@ -75,7 +75,7 @@ normal quality | 0 | 120x90
 If you need IE support, add this pollyfil to html
 ```html
 <script type="text/javascript">
-  if (!('Promise' in window)) {
+  if (window.Element && !Element.prototype.closest) {
     var script = document.createElement("script");
     script.src = "https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.closest";
     document.getElementsByTagName('head')[0].appendChild(script);
