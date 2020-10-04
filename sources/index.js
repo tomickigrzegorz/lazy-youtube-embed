@@ -1,181 +1,131 @@
 class ytLazy {
-  constructor(classElement, options = {}) {
+  constructor(classElement, { background = '#000', opacity = 90 }) {
     this.className = classElement;
-    this.backgroundColor = options.backgroundColor === 'undefined' ? options.backgroundColor : '#000000';
-    this.opacity = options.opacity === 'undefined' ? options.opacity : 90;
-
-    this.divElement = document.createElement('div');
-    this.button = document.createElement('button');
-    this.iframe = document.createElement('iframe');
-    this.iframe.setAttribute('frameborder', '0');
-    this.iframe.setAttribute('allowfullscreen', '');
-    this.iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+    this.background = background;
+    this.opacity = opacity;
 
     this.initial();
   }
 
-  initial() {
-    this.getYTLazy = document.querySelectorAll(`.${this.className}`);
+  initial = () => {
+    const getYTLazy = document.querySelectorAll(`.${this.className}`);
 
-    for (let i = 0; i < this.getYTLazy.length; i++) {
+    for (let i = 0; i < getYTLazy.length; i++) {
+      const { id } = this.parseJson(getYTLazy[i].getAttribute('data-yt'));
 
-      const { type, id, local } = this.parseJson(this.getYTLazy[i].getAttribute('data-yt'));
+      getYTLazy[i].setAttribute(
+        'style',
+        `background-image:url('//i.ytimg.com/vi/${id}/0.jpg');`
+      );
 
-      this.type = type;
-      this.id = id;
-      this.local = local || false;
-
-      this.imgType = this.imageType(this.type);
-
-      this.getYTLazy[i].setAttribute('style', `background-image: url('//i.ytimg.com/vi/${this.id}/${this.imgType}'); background-repeat:no-repeat; background-size: cover; background-position: center;`);
-
-      this.getYTLazy[i].appendChild(this.createButtonYoutube());
+      getYTLazy[i].appendChild(this.createBtn());
     }
-  }
-
-  parseJson(object) {
-    return JSON.parse(object);
-  }
-
-  /*
-  | Thumbnail Name      | Size (px) | URL                                              |
-  |---------------------|-----------|--------------------------------------------------|
-  | Player Background   | 480x360   | https://i1.ytimg.com/vi/<VIDEO ID>/0.jpg         |
-  | Start               | 120x90    | https://i1.ytimg.com/vi/<VIDEO ID>/1.jpg         |
-  | Middle              | 120x90    | https://i1.ytimg.com/vi/<VIDEO ID>/2.jpg         |
-  | End                 | 120x90    | https://i1.ytimg.com/vi/<VIDEO ID>/3.jpg         |
-  | High Quality        | 480x360   | https://i1.ytimg.com/vi/<VIDEO ID>/hqdefault.jpg |
-  | Medium Quality      | 320x180   | https://i1.ytimg.com/vi/<VIDEO ID>/mqdefault.jpg |
-  | Normal Quality      | 120x90    | https://i1.ytimg.com/vi/<VIDEO ID>/default.jpg   |
-  */
-  imageType(type) {
-    let imgType = '';
-    switch (type) {
-      case 0:
-        imgType = 'default.jpg';
-        break;
-      case 1:
-        imgType = '0.jpg';
-        break;
-      case 2:
-        imgType = '1.jpg';
-        break;
-      case 3:
-        imgType = '2.jpg';
-        break;
-      case 4:
-        imgType = '3.jpg';
-        break;
-      case 5:
-        imgType = 'hqdefault.jpg';
-        break;
-      case 6:
-        imgType = 'mqdefault.jpg';
-        break;
-    }
-    return imgType;
-  }
-
-  convertHexToRgb(hex, alpha) {
-    const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
-    return alpha ? `rgba(${r},${g},${b},${alpha / 100})` : `rgb(${r},${g},${b})`;
   };
 
-  createButtonYoutube() {
-    const buttonW = this.divElement.cloneNode();
-    buttonW.className = 'ytLazy__thumbnail';
+  parseJson = (object) => JSON.parse(object);
 
-    const buttonS = this.divElement.cloneNode();
-    buttonS.classList.add('ytLazy__img');
-    buttonS.classList.add('ytLazy__img--svg');
+  HexToRgb = (hex, opacity) => {
+    return (
+      'rgba(' +
+      // eslint-disable-next-line no-param-reassign
+      (hex = hex.replace('#', ''))
+        .match(new RegExp('(.{' + hex.length / 3 + '})', 'g'))
+        .map(function (l) {
+          return parseInt(hex.length % 2 ? l + l : l, 16);
+        })
+        .concat(opacity / 100 || 1)
+        .join(',') +
+      ')'
+    );
+  };
+
+  addClass = (name) => {
+    const element = document.createElement('div');
+    element.className = name;
+    return element;
+  };
+
+  createBtn = () => {
+    const buttonW = this.addClass('ytLazy__thumbnail');
+    const buttonS = this.addClass('ytLazy__img ytLazy__img--svg');
 
     buttonW.appendChild(buttonS);
     return buttonW;
-  }
+  };
 
-  createFrame(id) {
-    const frame = this.iframe.cloneNode();
-    // frame.src = `//www.youtube.com/embed/${id}`;
-    frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+  createIFrame = (id) => {
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute(
+      'allow',
+      'accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture'
+    );
+    iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+    return iframe;
+  };
 
-    return frame;
-  }
+  handleEvent = () => {
+    [].slice.call(['click', 'keydown']).map((element) => {
+      document.addEventListener(element, (event) => {
+        event.stopPropagation();
+        const { target } = event;
 
-  handleEvent() {
-    document.body.addEventListener('click', event => {
-      event.preventDefault();
-      const { target } = event;
-      const element = target.closest('.ytLazy__item');
+        const element = target.closest('.ytLazy__item');
 
-      if (target.className === 'ytLight-close' || target.className === 'ytLight-wrap') {
-        this.isOpen = document.querySelector('.is-open');
-        this.removeLightbox(this.isOpen);
-      }
+        if (
+          target.className === 'ytLight-close' ||
+          target.className === 'ytLight-wrap' ||
+          event.keyCode === 27
+        ) {
+          const isOpen = document.querySelector('.is-open');
+          if (isOpen === null) return;
+          isOpen.parentNode.removeChild(isOpen);
+        }
 
-      if (element === null || (element.className !== this.className)) return;
+        if (element === null || element.className !== this.className) return;
 
-      const { id, local } = this.parseJson(element.getAttribute('data-yt'));
+        const { id, local } = this.parseJson(element.getAttribute('data-yt'));
+        if (local) {
+          const frame = this.createIFrame(id);
+          frame.setAttribute('width', '100%');
+          frame.setAttribute('height', '100%');
 
-      if (local) {
-        const frame = this.createFrame(id);
-        frame.setAttribute('width', '100%');
-        frame.setAttribute('height', '100%');
-
-        element.innerHTML = '';
-        element.appendChild(frame);
-        return;
-      } else {
-        this.lightbox(id);
-      }
+          element.innerHTML = '';
+          element.appendChild(frame);
+          return;
+        } else {
+          this.lightbox(id);
+        }
+      });
     });
+  };
 
-    window.addEventListener('keydown', event => {
-      event.stopPropagation();
-      if (event.keyCode === 27) {
-        this.isOpen = document.querySelector('.is-open');
-        if (this.isOpen === null) return;
-        this.removeLightbox(this.isOpen);
-      }
-    });
-
-  }
-
-  removeLightbox(element) {
-    element.parentNode.removeChild(element);
-  }
-
-  lightbox(id) {
-    const button = this.button.cloneNode();
+  lightbox = (id) => {
+    const button = document.createElement('button');
     button.className = 'ytLight-close';
     button.setAttribute('type', 'button');
     button.setAttribute('title', 'close movie');
 
-    const wrap = this.divElement.cloneNode();
-    wrap.className = 'ytLight-wrap';
+    const wrap = this.addClass('ytLight-wrap');
+    const container = this.addClass('ytLight-container');
+    const iframCointainer = this.addClass('ytLight-iframe');
 
-    const container = this.divElement.cloneNode();
-    container.className = 'ytLight-container';
-
-    const iframCointainer = this.divElement.cloneNode();
-    iframCointainer.className = 'ytLight-iframe';
-
-    iframCointainer.appendChild(this.createFrame(id));
-
+    iframCointainer.appendChild(this.createIFrame(id));
     container.appendChild(iframCointainer);
     wrap.appendChild(container);
 
     iframCointainer.insertAdjacentElement('afterend', button);
 
-
-    const lightboxDiv = this.divElement.cloneNode();
-    lightboxDiv.classList.add('ytLight');
-    lightboxDiv.classList.add('is-open');
-    lightboxDiv.setAttribute('style', `background: ${this.convertHexToRgb(this.backgroundColor, this.opacity)}`)
+    const lightboxDiv = this.addClass('ytLight is-open');
+    lightboxDiv.setAttribute(
+      'style',
+      `background:${this.HexToRgb(this.background, this.opacity)}`
+    );
     lightboxDiv.appendChild(wrap);
 
     document.body.appendChild(lightboxDiv);
-  }
-
+  };
 }
 
 export default ytLazy;

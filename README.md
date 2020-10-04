@@ -8,6 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/package-json/v/tomik23/lazy-youtube">
+  <img src="https://img.shields.io/github/size/tomik23/lazy-youtube/docs/youtubeLazy.min.js">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-green.svg">
   </a>
@@ -20,16 +21,6 @@
 ## Demo
 See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 
-thumbnail name | data-yt-type | size (px)
----- | :-------: | :-------
-player Background | 1 | 480x360
-start | 2 | 120x90
-middle | 3 | 120x90
-end | 4 | 120x90
-high quality | 5 | 480x360
-medium quality | 6 | 320x180
-normal quality | 0 | 120x90
-
 > close the lightbox by pressing the ESC key
 
 ## How to configure it?
@@ -40,13 +31,12 @@ normal quality | 0 | 120x90
 ```
 
 ### Add a div with the appropriate json
-- **"type": 5** - type of thumbnail, see table above
 - **"id": "TUIbj4mviXU"** - id is the id of the movie you can find it in every youtube link
 - **"local": true** - parameter that tells the library that the movie should play in the same div as the thumbnail, not in the lightbox
 
 ```html
-<div class="ytLazy__item" data-yt='{ "type":5, "id":"TUIbj4mviXU" }'></div>
-<div class="ytLazy__item" data-yt='{ "type":5, "id":"XHeDps0fX6c", "local": true }'></div>
+<div class="ytLazy__item" data-yt='{ "id":"TUIbj4mviXU" }'></div>
+<div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "local": true }'></div>
 ```
 
 ### Add a library, configuration options that are not required and call the library
@@ -56,8 +46,8 @@ normal quality | 0 | 120x90
 <script>
   // options are optional
   const options = {
-    // color in hex, default black - #000000
-    backgroundColor: '#383838',
+    // color in hex, default black - #000
+    background: '#383838',
     // lightbox opcity, [10, 20, ...], max is 100
     // default: 90
     opacity: 90
