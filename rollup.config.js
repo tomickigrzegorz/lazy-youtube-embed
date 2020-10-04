@@ -15,10 +15,11 @@ export default {
   },
   plugins: [
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      babelHelpers: 'bundled',
     }),
-    terser(),
-    (!PRODUCTION && serve({ open: true, contentBase: 'docs' })),
-    (!PRODUCTION && livereload())
+    PRODUCTION && terser(),
+    !PRODUCTION && serve({ open: true, contentBase: 'docs' }),
+    !PRODUCTION && livereload()
   ]
 };

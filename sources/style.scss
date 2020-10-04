@@ -5,6 +5,12 @@
   --lightbox-iframe-ratio: 9/16;
 }
 
+[data-yt] {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .ytLazy {
   &__item {
     cursor: pointer;
@@ -71,7 +77,6 @@
   white-space: nowrap;
   outline: none;
   opacity: 0;
-  // background: rgba(0, 0, 0, 0.9);
   transition: all 1s linear;
 
   &-wrap {
