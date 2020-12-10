@@ -11,9 +11,9 @@
     "prod": "concurrently \"yarn build\" \"yarn sass:prod\" \"yarn postcss\"",
     "build": "rollup --config --environment PRODUCTION",
     "watch": "rollup --config --watch",
-    "sass:dev": "node-sass ./sources/style.scss ./docs/youtubeLazy.min.css -w",
-    "sass:prod": "node-sass ./sources/style.scss ./docs/youtubeLazy.min.css --output-style compressed",
-    "postcss": "postcss docs/youtubeLazy.min.css -p sugarss -o docs/youtubeLazy.min.css -m"
+    "sass:dev": "node-sass sources/style.scss docs/youtubeLazy.min.css -w",
+    "sass:prod": "node-sass sources/style.scss docs/youtubeLazy.min.css --output-style compressed",
+    "postcss": "postcss docs/youtubeLazy.min.css -p -o docs/youtubeLazy.min.css -m"
   },
   "browserslist": [
     ">0.2%",
@@ -34,6 +34,7 @@
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.2.0",
     "node-sass": "^5.0.0",
+    "postcss": "^8.2.1",
     "postcss-cli": "^8.3.0",
     "postcss-css-variables": "^0.17.0",
     "prettier": "^2.2.1",
