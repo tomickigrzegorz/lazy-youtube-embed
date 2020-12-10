@@ -15,8 +15,8 @@
   &__item {
     cursor: pointer;
 
-    &:hover svg {
-      fill: #ff0000;
+    &:hover .ytLazy__img {
+      opacity: 1;
     }
   }
 
@@ -50,14 +50,9 @@
       z-index: 10;
       transform: translate(-50%, -50%);
       cursor: pointer;
-      fill: hsla(0, 100%, 50%, 0.7);
       height: 70px;
       width: 69px;
       opacity: 0.6;
-
-      &:hover {
-        opacity: 1;
-      }
 
       @media (max-width: 950px) {
         height: 60px;
