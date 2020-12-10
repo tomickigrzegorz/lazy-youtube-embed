@@ -98,6 +98,10 @@
     }
   }
 
+  &-active {
+    overflow: hidden;
+  }
+
   &-container {
     z-index: calc(var(--lightbox-z-index-base) + 2);
     position: relative;
