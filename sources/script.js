@@ -24,19 +24,10 @@ class ytLazy {
 
   parseJson = (object) => JSON.parse(object);
 
-  HexToRgb = (hex, opacity) => {
-    return (
-      'rgba(' +
-      // eslint-disable-next-line no-param-reassign
-      (hex = hex.replace('#', ''))
-        .match(new RegExp('(.{' + hex.length / 3 + '})', 'g'))
-        .map(function (l) {
-          return parseInt(hex.length % 2 ? l + l : l, 16);
-        })
-        .concat(opacity / 100 || 1)
-        .join(',') +
-      ')'
-    );
+  hex2rgb = (hex, opacity = 10) => {
+    const c =
+      typeof hex === 'string' ? parseInt(hex.replace('#', ''), 16) : hex;
+    return `rgba(${c >> 16},${(c & 0xff00) >> 8},${c & 0xff},${opacity / 100})`;
   };
 
   addClass = (name) => {
@@ -56,7 +47,7 @@ class ytLazy {
   createIFrame = (id) => {
     const iframe = document.createElement('iframe');
     iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('allowfullscreen', 'true');
     iframe.setAttribute(
       'allow',
       'accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture'
@@ -81,6 +72,7 @@ class ytLazy {
           const isOpen = document.querySelector('.is-open');
           if (isOpen === null) return;
           isOpen.parentNode.removeChild(isOpen);
+          document.body.classList.remove('ytLight-active');
         }
 
         if (element === null || element.className !== this.className) return;
@@ -102,6 +94,8 @@ class ytLazy {
   };
 
   lightbox = (id) => {
+    document.body.classList.add('ytLight-active');
+
     const button = document.createElement('button');
     button.className = 'ytLight-close';
     button.setAttribute('type', 'button');
@@ -120,7 +114,7 @@ class ytLazy {
     const lightboxDiv = this.addClass('ytLight is-open');
     lightboxDiv.setAttribute(
       'style',
-      `background:${this.HexToRgb(this.background, this.opacity)}`
+      `background:${this.hex2rgb(this.background, this.opacity)}`
     );
     lightboxDiv.appendChild(wrap);
 
