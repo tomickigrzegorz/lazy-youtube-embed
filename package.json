@@ -1,6 +1,6 @@
 {
   "name": "youtubelazy",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Lazy loading youtube on lightbox",
   "author": "Grzegorz Tomicki",
   "license": "MIT",
@@ -11,8 +11,8 @@
     "prod": "concurrently \"yarn build\" \"yarn sass:prod\" \"yarn postcss\"",
     "build": "rollup --config --environment PRODUCTION",
     "watch": "rollup --config --watch",
-    "sass:dev": "node-sass sources/style.scss docs/youtubeLazy.min.css -w",
-    "sass:prod": "node-sass sources/style.scss docs/youtubeLazy.min.css --output-style compressed",
+    "sass:dev": "sass sources/style.scss docs/youtubeLazy.min.css --watch",
+    "sass:prod": "sass --no-source-map sources/style.scss docs/youtubeLazy.min.css",
     "postcss": "postcss docs/youtubeLazy.min.css -p -o docs/youtubeLazy.min.css -m"
   },
   "browserslist": [
@@ -21,26 +21,26 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/eslint-parser": "^7.12.1",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.12.10",
-    "@rollup/plugin-babel": "^5.2.2",
-    "autoprefixer": "^10.1.0",
-    "concurrently": "^5.3.0",
-    "core-js": "^3.8.1",
+    "@babel/core": "^7.13.1",
+    "@babel/eslint-parser": "^7.13.4",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.5",
+    "@rollup/plugin-babel": "^5.3.0",
+    "autoprefixer": "^10.2.4",
+    "concurrently": "^6.0.0",
+    "core-js": "^3.9.0",
     "cssnano": "^4.1.10",
-    "eslint": "^7.15.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-prettier": "^3.2.0",
-    "node-sass": "^5.0.0",
-    "postcss": "^8.2.1",
-    "postcss-cli": "^8.3.0",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "postcss": "^8.2.6",
+    "postcss-cli": "^8.3.1",
     "postcss-css-variables": "^0.17.0",
     "prettier": "^2.2.1",
-    "rollup": "^2.34.2",
+    "rollup": "^2.39.1",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-serve": "^1.1.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.32.8"
   }
 }
