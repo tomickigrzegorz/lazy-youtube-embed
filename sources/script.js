@@ -15,7 +15,7 @@ class ytLazy {
 
       getYTLazy[i].setAttribute(
         'style',
-        `background-image:url('//i.ytimg.com/vi/${id}/0.jpg');`
+        `background-image:url('//i.ytimg.com/vi/${id}/sddefault.jpg');`
       );
 
       getYTLazy[i].appendChild(this.createBtn());
@@ -50,9 +50,10 @@ class ytLazy {
     iframe.setAttribute('allowfullscreen', 'true');
     iframe.setAttribute(
       'allow',
-      'accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture'
+      'accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;'
     );
     iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+
     return iframe;
   };
 
@@ -85,6 +86,7 @@ class ytLazy {
 
           element.innerHTML = '';
           element.appendChild(frame);
+
           return;
         } else {
           this.lightbox(id);
