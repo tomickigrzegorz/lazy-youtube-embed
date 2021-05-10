@@ -1,0 +1,39 @@
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #000000;
+}
+
+.content {
+  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+  gap: 3px;
+}
+
+.content > div {
+  flex: 1 1 30%;
+}
+
+@media (max-width: 800px) {
+  .content > div {
+    flex: 1 1 50%;
+  }
+}
+
+@media (max-width: 600px) {
+  .content > div {
+    flex: 1 1 100%;
+  }
+}
