@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": false,
+    "removeComments": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "sources/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

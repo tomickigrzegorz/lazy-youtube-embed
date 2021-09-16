@@ -30,7 +30,7 @@
       <div class="ytLazy__item" data-yt='{ "id": "vlDzYIIOYmM" }'></div>
       <div class="ytLazy__item" data-yt='{ "id": "TOuF7ZbcCUs" }'></div>
       <div class="ytLazy__item" data-yt='{ "id": "wTcNtgA6gHs" }'></div>
-      <div class="ytLazy__item" data-yt='{ "id": "MKunD8H3G-8" }'></div>
+      <div class="ytLazy__item" data-yt='{ "id": "MKunD8H3G-8", "maxWidth": 50 }'></div>
     </div>
 
     <script src="./youtubeLazy.min.js"></script>
@@ -41,7 +41,10 @@
         background: '#000',
         // lightbox opcity, [10, 20, ...], max is 100
         // optional, default: 90
-        opacity: 90
+        opacity: 90,
+
+        // a global setter for all max-width movies
+        maxWidth: 80
       };
 
       // ytLazy__item youtube class div
