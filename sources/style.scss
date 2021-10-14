@@ -72,7 +72,18 @@
   white-space: nowrap;
   outline: none;
   opacity: 0;
-  transition: all 1s linear;
+  pointer-events: none;
+  transition: opacity 300ms ease-in-out;
+
+  &.is-open {
+    &::before {
+      position: fixed;
+      z-index: 9;
+      content: '';
+      width: 100%;
+      height: 100%;
+    }
+  }
 
   &-wrap {
     z-index: var(--lightbox-z-index-base);
@@ -158,5 +169,5 @@
 
 .is-open {
   opacity: 1;
-  transition: all 0.5s linear;
+  pointer-events: auto;
 }

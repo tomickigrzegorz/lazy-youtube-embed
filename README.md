@@ -56,12 +56,18 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
     // color in hex, default black - #000
     background: '#383838',
     // lightbox opcity, [10, 20, ...], max is 100
-    // default: 90
+    // default: 80
     opacity: 90,
 
     // global setting for the width of
     // the displayed movie as a percentage
+    // default 90%
     maxWidth: 80
+
+    // hide overflow to body
+    // when open lightbox
+    // default false
+    overflow: true,
   };
 
   // ytLazy__item youtube class div with options
