@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
     "module": "ESNext",
     "strict": true,
+    "importHelpers": true,
     "esModuleInterop": true,
     "skipLibCheck": false,
     "removeComments": true,

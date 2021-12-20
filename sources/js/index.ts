@@ -1,17 +1,20 @@
-interface ConstructorObject {
-  background?: string;
-  opacity?: number;
-  overflow?: boolean;
-  maxWidth?: number | null;
-}
+import {
+  addClass,
+  setAttr,
+  parseJson,
+  createIFrame,
+  createRedButton,
+} from './utils/function';
 
-class ytLazy {
+export default class ytLazy {
   private class: string;
   private background?: string;
   private opacity?: number;
   private overflow?: boolean;
   private overLayer: HTMLElement;
   private maxWidth?: number | null;
+  private createWatchIn?: Function;
+  private link: string;
 
   constructor(
     classElement: string,
@@ -20,6 +23,7 @@ class ytLazy {
       opacity = 80,
       maxWidth = 90,
       overflow = false,
+      createWatchIn = () => {},
     }: ConstructorObject
   ) {
     this.class = classElement;
@@ -27,8 +31,10 @@ class ytLazy {
     this.opacity = opacity;
     this.overflow = overflow;
     this.maxWidth = maxWidth;
+    this.createWatchIn = createWatchIn;
+    this.link = 'https://www.youtube.com';
 
-    this.overLayer = this.addClass('div', 'ytLight');
+    this.overLayer = addClass('div', 'ytLight');
     const overLayer = this.overLayer;
     document.body.appendChild(overLayer);
 
@@ -39,19 +45,26 @@ class ytLazy {
     const getYTLazy = document.querySelectorAll(`.${this.class}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
-      const { id } = this.parseJson(getYTLazy[i].getAttribute('data-yt'));
+      const { id, openIn } = parseJson(getYTLazy[i].getAttribute('data-yt'));
 
-      this.setAttr(<HTMLElement>getYTLazy[i], {
+      setAttr(<HTMLElement>getYTLazy[i], {
         style: `background-image:url('//i.ytimg.com/vi/${id}/sddefault.jpg');`,
       });
 
-      getYTLazy[i].appendChild(this.crBtn());
+      getYTLazy[i].appendChild(createRedButton());
+
+      if (openIn && this.createWatchIn) {
+        this.createWatchIn({
+          link: this.link + '/watch?v=' + id,
+          template: (template: string) => {
+            getYTLazy[i].insertAdjacentHTML('beforeend', template);
+          },
+        });
+      }
     }
 
     this.handEvent();
   };
-
-  parseJson = (object: any) => JSON.parse(object);
 
   hex2rgb = (hex: string = '#000', opacity = 10) => {
     const c =
@@ -59,50 +72,18 @@ class ytLazy {
     return `rgba(${c >> 16},${(c & 0xff00) >> 8},${c & 0xff},${opacity / 100})`;
   };
 
-  addClass = (type: string, name: string) => {
-    const element = document.createElement(type);
-    element.className = name;
-    return element;
-  };
-
-  crBtn = () => {
-    const buttonW = this.addClass('div', 'ytLazy__thumbnail');
-    const buttonS = this.addClass('div', 'ytLazy__img ytLazy__img--svg');
-
-    buttonW.appendChild(buttonS);
-    return buttonW;
-  };
-
-  setAttr = (el: HTMLElement, attrs: any) => {
-    for (var key in attrs) {
-      el.setAttribute(key, attrs[key]);
-    }
-  };
-
-  crIFrame = (id: string) => {
-    const iframe = this.addClass('iframe', '');
-    this.setAttr(iframe, {
-      frameborder: '0',
-      allowfullscreen: 'true',
-      allow:
-        'accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;',
-      src: `https://www.youtube.com/embed/${id}?autoplay=1`,
-    });
-
-    return iframe;
-  };
-
   setLbox = (target: HTMLElement) => {
+    const watchIn = target.closest('.ytLazy__watch-in-link');
+    if (watchIn) return;
+
     const element = target.closest('.ytLazy__item');
 
     if (element === null || element.className !== this.class) return;
 
-    const { id, local, maxWidth } = this.parseJson(
-      element.getAttribute('data-yt')
-    );
+    const { id, local, maxWidth } = parseJson(element.getAttribute('data-yt'));
     if (local) {
-      const frame = this.crIFrame(id);
-      this.setAttr(frame, {
+      const frame = createIFrame(id, this.link);
+      setAttr(frame, {
         width: '100%',
         height: '100%',
       });
@@ -150,23 +131,23 @@ class ytLazy {
       document.body.classList.add('ytLight-active');
     }
 
-    const button = this.addClass('button', 'ytLight-close');
-    this.setAttr(button, {
+    const button = addClass('button', 'ytLight-close');
+    setAttr(button, {
       type: 'button',
       title: 'close movie',
     });
 
-    const wrap = this.addClass('div', 'ytLight-wrap');
-    const container = this.addClass('div', 'ytLight-container');
+    const wrap = addClass('div', 'ytLight-wrap');
+    const container = addClass('div', 'ytLight-container');
 
     (this.maxWidth || maxWidth) &&
-      this.setAttr(container, {
+      setAttr(container, {
         style: `max-width: ${maxWidth || this.maxWidth}%`,
       });
 
-    const iframCointainer = this.addClass('div', 'ytLight-iframe');
+    const iframCointainer = addClass('div', 'ytLight-iframe');
 
-    iframCointainer.appendChild(this.crIFrame(id));
+    iframCointainer.appendChild(createIFrame(id, this.link));
     container.appendChild(iframCointainer);
     wrap.appendChild(container);
 
@@ -181,5 +162,3 @@ class ytLazy {
     );
   };
 }
-
-export default ytLazy;
