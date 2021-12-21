@@ -39,7 +39,7 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.0/dist/css/youtubeLazy.min.js"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.0/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.0/dist/js/youtubeLazy.min.js"></script>
