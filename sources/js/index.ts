@@ -9,7 +9,6 @@ import {
 export default class ytLazy {
   private class: string;
   private background?: string;
-  private opacity?: number;
   private overflow?: boolean;
   private overLayer: HTMLElement;
   private maxWidth?: number | null;
@@ -19,8 +18,7 @@ export default class ytLazy {
   constructor(
     classElement: string,
     {
-      background = '#000',
-      opacity = 80,
+      background = 'rgba(0,0,0,0.9)',
       maxWidth = 90,
       overflow = false,
       createWatchIn = () => {},
@@ -28,14 +26,13 @@ export default class ytLazy {
   ) {
     this.class = classElement;
     this.background = background;
-    this.opacity = opacity;
     this.overflow = overflow;
     this.maxWidth = maxWidth;
     this.createWatchIn = createWatchIn;
     this.link = 'https://www.youtube.com';
 
     this.overLayer = addClass('div', 'ytLight');
-    const overLayer = this.overLayer;
+    let overLayer = this.overLayer;
     document.body.appendChild(overLayer);
 
     this.initial();
@@ -45,13 +42,20 @@ export default class ytLazy {
     const getYTLazy = document.querySelectorAll(`.${this.class}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
-      const { id, openIn } = parseJson(getYTLazy[i].getAttribute('data-yt'));
+      const { id, openIn, title } = parseJson(
+        getYTLazy[i].getAttribute('data-yt')
+      );
 
       setAttr(<HTMLElement>getYTLazy[i], {
         style: `background-image:url('//i.ytimg.com/vi/${id}/sddefault.jpg');`,
       });
 
       getYTLazy[i].appendChild(createRedButton());
+
+      if (title ?? false) {
+        const titleElement = `<div class="ytLazy__title">${title}</div><div class="ytLazy__gradient-top"></div>`;
+        getYTLazy[i].insertAdjacentHTML('beforeend', titleElement);
+      }
 
       if (openIn && this.createWatchIn) {
         this.createWatchIn({
@@ -64,12 +68,6 @@ export default class ytLazy {
     }
 
     this.handEvent();
-  };
-
-  hex2rgb = (hex: string = '#000', opacity = 10) => {
-    const c =
-      typeof hex === 'string' ? parseInt(hex.replace('#', ''), 16) : hex;
-    return `rgba(${c >> 16},${(c & 0xff00) >> 8},${c & 0xff},${opacity / 100})`;
   };
 
   setLbox = (target: HTMLElement) => {
@@ -153,12 +151,9 @@ export default class ytLazy {
 
     iframCointainer.insertAdjacentElement('afterend', button);
 
-    const overlay = this.overLayer;
+    let overlay = this.overLayer;
     overlay.appendChild(wrap);
     overlay.classList.add('is-open');
-    overlay.setAttribute(
-      'style',
-      `background:${this.hex2rgb(this.background, this.opacity)}`
-    );
+    overlay.setAttribute('style', `background:${this.background};`);
   };
 }

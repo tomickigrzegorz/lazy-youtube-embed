@@ -35,15 +35,19 @@
     var ytLazy = (function () {
         function ytLazy(classElement, _a) {
             var _this = this;
-            var _b = _a.background, background = _b === void 0 ? '#000' : _b, _c = _a.opacity, opacity = _c === void 0 ? 80 : _c, _d = _a.maxWidth, maxWidth = _d === void 0 ? 90 : _d, _e = _a.overflow, overflow = _e === void 0 ? false : _e, _f = _a.createWatchIn, createWatchIn = _f === void 0 ? function () { } : _f;
+            var _b = _a.background, background = _b === void 0 ? 'rgba(0,0,0,0.9)' : _b, _c = _a.maxWidth, maxWidth = _c === void 0 ? 90 : _c, _d = _a.overflow, overflow = _d === void 0 ? false : _d, _e = _a.createWatchIn, createWatchIn = _e === void 0 ? function () { } : _e;
             this.initial = function () {
                 var getYTLazy = document.querySelectorAll(".".concat(_this.class));
                 var _loop_1 = function (i) {
-                    var _a = parseJson(getYTLazy[i].getAttribute('data-yt')), id = _a.id, openIn = _a.openIn;
+                    var _a = parseJson(getYTLazy[i].getAttribute('data-yt')), id = _a.id, openIn = _a.openIn, title = _a.title;
                     setAttr(getYTLazy[i], {
                         style: "background-image:url('//i.ytimg.com/vi/".concat(id, "/sddefault.jpg');"),
                     });
                     getYTLazy[i].appendChild(createRedButton());
+                    if (title !== null && title !== void 0 ? title : false) {
+                        var titleElement = "<div class=\"ytLazy__title\">".concat(title, "</div><div class=\"ytLazy__gradient-top\"></div>");
+                        getYTLazy[i].insertAdjacentHTML('beforeend', titleElement);
+                    }
                     if (openIn && _this.createWatchIn) {
                         _this.createWatchIn({
                             link: _this.link + '/watch?v=' + id,
@@ -57,12 +61,6 @@
                     _loop_1(i);
                 }
                 _this.handEvent();
-            };
-            this.hex2rgb = function (hex, opacity) {
-                if (hex === void 0) { hex = '#000'; }
-                if (opacity === void 0) { opacity = 10; }
-                var c = typeof hex === 'string' ? parseInt(hex.replace('#', ''), 16) : hex;
-                return "rgba(".concat(c >> 16, ",").concat((c & 0xff00) >> 8, ",").concat(c & 0xff, ",").concat(opacity / 100, ")");
             };
             this.setLbox = function (target) {
                 var watchIn = target.closest('.ytLazy__watch-in-link');
@@ -136,11 +134,10 @@
                 var overlay = _this.overLayer;
                 overlay.appendChild(wrap);
                 overlay.classList.add('is-open');
-                overlay.setAttribute('style', "background:".concat(_this.hex2rgb(_this.background, _this.opacity)));
+                overlay.setAttribute('style', "background:".concat(_this.background, ";"));
             };
             this.class = classElement;
             this.background = background;
-            this.opacity = opacity;
             this.overflow = overflow;
             this.maxWidth = maxWidth;
             this.createWatchIn = createWatchIn;
