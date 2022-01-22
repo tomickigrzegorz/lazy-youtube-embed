@@ -39,10 +39,10 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.0/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.1/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.0/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.1/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -52,6 +52,7 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 - **"local": true** - parameter that tells the library that the movie should play in the same div as the thumbnail, not in the lightbox
 - **"maxWidth": 50** - the video opens to the given width, it is a percentage, in this example 50%, if there is no number then the video opens to the whole window - 100%. You can also set a global `maxWidth` for all videos that open in the lightbox. Just add the same `maxWidth: 80` parameter to option, see the example below
 - **"openIn"** - this parameter allows you to display a button which, when clicked, directly opens the youtube page with the movie. For full functionality you need the corresponding parameter also added to js, see below `createWatchIn: () => {}`
+- **"title"** - the title of the video, it is displayed top of container`
 
 ```html
 <!-- default -->
@@ -65,6 +66,9 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 
 <!-- add button "Watch in ..." -->
 <div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "openIn": true }'></div>
+
+<!-- add title -->
+<div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "title": "Movie title ;)" }'></div>
 ```
 > off course you can mix all of them
 
@@ -73,7 +77,7 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 ```html
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="youtube-logo" viewBox="0 0 300 67">
-  <path ... />
+    <path ... />
   </symbol>
 </svg>
 
@@ -82,12 +86,9 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 <script>
   // options are optional
   const options = {
-    // color in hex, default black - #000
-    background: '#383838',
-
-    // lightbox opcity, [10, 20, ...], max is 100
-    // default: 80
-    opacity: 90,
+    // you can add color with opacity, default: 'rgba(0,0,0,0.9)'
+    // rgba, hsla
+    background: 'rgba(0,0,0,0.6)',
 
     // global setting for the width of the displayed
     // movie as a percentage default 90%
