@@ -53,11 +53,9 @@
   &__watch-in-link {
     display: flex;
     align-items: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
-      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
     display: flex;
     font-size: 1.2rem;
-    padding: 10px;
+    padding: 10px 10px 10px 20px;
     text-decoration: none;
 
     span {
@@ -92,6 +90,32 @@
         width: 39px;
       }
     }
+  }
+
+  &__title {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #fff;
+    z-index: 1;
+    font-size: 1.2rem;
+  }
+
+  &__gradient-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 0;
+    background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0) 23%,
+      rgba(122, 122, 122, 0.8) 72%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
   }
 }
 
