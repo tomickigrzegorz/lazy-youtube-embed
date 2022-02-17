@@ -1,19 +1,21 @@
 {
   "name": "youtubelazy",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Lazy loading youtube on lightbox",
   "author": "Grzegorz Tomicki",
   "license": "MIT",
   "main": "dist/js/youtubeLazy.js",
   "scripts": {
     "dev": "concurrently \"yarn sass:dev\" \"yarn sass:prod\" \"yarn watch\"",
-    "prod": "yarn build && yarn sass:prod && yarn postcss:global && yarn postcss:lazyYoutube",
+    "prod": "yarn build && yarn sass:prod && yarn postcss:global && yarn postcss:lazyYoutube && yarn postcss:ie && yarn lib:version",
     "build": "rollup -c --environment PRODUCTION",
     "watch": "rollup -c -w",
     "sass:prod": "sass --no-source-map sources/scss:docs/css",
     "sass:dev": "sass --watch sources/scss:docs/css",
     "postcss:global": "postcss docs/css --dir docs/css",
-    "postcss:lazyYoutube": "postcss --ext min.css docs/css/youtubeLazy.css --dir dist/css/"
+    "postcss:lazyYoutube": "postcss --ext min.css docs/css/youtubeLazy.css --dir dist/css/",
+    "postcss:ie": "postcss --u postcss-css-variables --no-map --ext ie.min.css docs/css/youtubeLazy.css --dir dist/css/",
+    "lib:version": "node ./scripts/version.js"
   },
   "devDependencies": {
     "@babel/core": "^7.16.10",

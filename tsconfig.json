@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "target": "es5",
     "module": "ESNext",
     "strict": true,
     "importHelpers": true,

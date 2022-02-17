@@ -1,130 +1,141 @@
-import serve from 'rollup-plugin-serve';
-import livereload from 'rollup-plugin-livereload';
-import typescript from '@rollup/plugin-typescript';
-import cleanup from 'rollup-plugin-cleanup';
-import { babel } from '@rollup/plugin-babel';
-import { terser } from 'rollup-plugin-terser';
+import serve from "rollup-plugin-serve";
+import livereload from "rollup-plugin-livereload";
+import typescript from "@rollup/plugin-typescript";
+import cleanup from "rollup-plugin-cleanup";
+import { babel } from "@rollup/plugin-babel";
+import { terser } from "rollup-plugin-terser";
 
-import pkg from './package.json';
+import pkg from "./package.json";
 
 const { PRODUCTION } = process.env;
-const input = 'sources/js/index.ts';
+const input = "sources/js/index.ts";
+
+const sharedPlugins = (target) => {
+  return [
+    babel({ babelHelpers: "bundled" }),
+    typescript({ noEmitOnError: false, target }),
+    cleanup(),
+  ];
+};
+
+const terserConfig = {
+  mangle: {
+    properties: {
+      regex: /^_/,
+    },
+  },
+};
 
 export default [
+  // --------------------------------------------------
+  // iife
   {
     input,
-    plugins: [
-      babel({ babelHelpers: 'bundled' }),
-      typescript({
-        noEmitOnError: false,
-      }),
-      cleanup(),
-    ],
+    plugins: [...sharedPlugins("es6")],
     watch: false,
     output: {
-      name: 'ytLazy',
-      format: 'iife',
       file: pkg.main,
+      format: "iife",
+      name: "ytLazy",
       sourcemap: true,
     },
   },
   {
     input,
-    plugins: [
-      babel({ babelHelpers: 'bundled' }),
-      typescript({
-        noEmitOnError: false,
-      }),
-      cleanup(),
-    ],
+    plugins: [...sharedPlugins("es6")],
     watch: false,
     output: {
-      name: 'ytLazy',
-      format: 'iife',
+      file: "dist/js/youtubeLazy.min.js",
+      format: "iife",
+      name: "ytLazy",
       sourcemap: false,
-      file: 'dist/js/youtubeLazy.min.js',
-      plugins: [terser()],
+      plugins: [terser({ ...terserConfig })],
     },
   },
   {
     input,
-    plugins: [
-      babel({ babelHelpers: 'bundled' }),
-      typescript({
-        noEmitOnError: false,
-      }),
-      cleanup(),
-    ],
+    plugins: [...sharedPlugins("es6")],
     output: {
-      name: 'ytLazy',
-      format: 'iife',
+      file: "docs/js/youtubeLazy.min.js",
+      format: "iife",
+      name: "ytLazy",
       sourcemap: true,
-      file: 'docs/js/youtubeLazy.min.js',
       plugins: [
-        terser({
-          mangle: true,
-        }),
-        !PRODUCTION && serve({ open: true, contentBase: ['docs'] }),
+        terser({ ...terserConfig }),
+        !PRODUCTION && serve({ open: true, contentBase: ["docs"] }),
         !PRODUCTION && livereload(),
       ],
     },
   },
+  // --------------------------------------------------
+  // umd
   {
     input,
     watch: false,
-    plugins: [
-      babel({ babelHelpers: 'bundled' }),
-      typescript({
-        noEmitOnError: false,
-      }),
-      cleanup(),
-    ],
+    plugins: [...sharedPlugins("es6")],
     output: [
       {
-        name: 'ytLazy',
-        format: 'umd',
+        file: "dist/js/youtubeLazy.umd.js",
+        format: "umd",
+        name: "ytLazy",
         sourcemap: true,
-        file: 'dist/js/youtubeLazy.umd.js',
       },
       {
-        name: 'ytLazy',
-        format: 'umd',
+        file: "dist/js/youtubeLazy.umd.min.js",
+        format: "umd",
+        name: "ytLazy",
         sourcemap: false,
-        file: 'dist/js/youtubeLazy.umd.min.js',
         plugins: [
           terser({
-            mangle: true,
+            ...terserConfig,
             compress: { drop_console: true, drop_debugger: true },
           }),
         ],
       },
     ],
   },
+  // --------------------------------------------------
+  // esm
   {
     input,
     watch: false,
-    plugins: [
-      babel({ babelHelpers: 'bundled' }),
-      typescript({
-        noEmitOnError: false,
-      }),
-      cleanup(),
-    ],
+    plugins: [...sharedPlugins("es6")],
     output: [
       {
-        name: 'ytLazy',
-        format: 'es',
+        file: "dist/js/youtubeLazy.esm.js",
+        format: "es",
+        name: "ytLazy",
         sourcemap: true,
-        file: 'dist/js/youtubeLazy.esm.js',
       },
       {
-        name: 'ytLazy',
-        format: 'es',
+        file: "dist/js/youtubeLazy.esm.min.js",
+        format: "es",
+        name: "ytLazy",
         sourcemap: false,
-        file: 'dist/js/youtubeLazy.esm.min.js',
         plugins: [
           terser({
-            mangle: true,
+            ...terserConfig,
+            compress: { drop_console: true, drop_debugger: true },
+          }),
+        ],
+      },
+    ],
+  },
+  // --------------------------------------------------
+  // ie
+  {
+    input,
+    watch: false,
+    plugins: [...sharedPlugins("es5")],
+    output: [
+      {
+        file: "dist/js/youtubeLazy.ie.min.js",
+        format: "iife",
+        name: "ytLazy",
+        sourcemap: false,
+        plugins: [
+          terser({
+            ...terserConfig,
             compress: { drop_console: true, drop_debugger: true },
           }),
         ],

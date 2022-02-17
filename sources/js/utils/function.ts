@@ -13,7 +13,7 @@ const addClass = (type: string, name: string) => {
  * @param el - element html
  * @param attrs - attributes
  */
-const setAttr = (el: HTMLElement, attrs: any) => {
+const setAttribute = (el: HTMLElement, attrs: any) => {
   for (var key in attrs) {
     el.setAttribute(key, attrs[key]);
   }
@@ -29,12 +29,12 @@ const parseJson = (object: any) => JSON.parse(object);
  * @param link - link to video
  */
 const createIFrame = (id: string, link: string) => {
-  const iframe = addClass('iframe', '');
-  setAttr(iframe, {
-    frameborder: '0',
-    allowfullscreen: 'true',
+  const iframe = addClass("iframe", "");
+  setAttribute(iframe, {
+    frameborder: "0",
+    allowfullscreen: "true",
     allow:
-      'accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;',
+      "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;",
     src: `${link}/embed/${id}?autoplay=1`,
   });
 
@@ -45,11 +45,11 @@ const createIFrame = (id: string, link: string) => {
  * @returns red button
  */
 const createRedButton = () => {
-  const buttonW = addClass('div', 'ytLazy__thumbnail');
-  const buttonS = addClass('div', 'ytLazy__img ytLazy__img--svg');
+  const buttonW = addClass("div", "ytLazy__thumbnail");
+  const buttonS = addClass("div", "ytLazy__img ytLazy__img--svg");
 
   buttonW.appendChild(buttonS);
   return buttonW;
 };
 
-export { addClass, setAttr, parseJson, createIFrame, createRedButton };
+export { addClass, setAttribute, parseJson, createIFrame, createRedButton };
