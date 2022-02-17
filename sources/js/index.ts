@@ -1,159 +1,173 @@
 import {
   addClass,
-  setAttr,
+  setAttribute,
   parseJson,
   createIFrame,
   createRedButton,
-} from './utils/function';
+} from "./utils/function";
 
 export default class ytLazy {
-  private class: string;
-  private background?: string;
-  private overflow?: boolean;
-  private overLayer: HTMLElement;
-  private maxWidth?: number | null;
-  private createWatchIn?: Function;
-  private link: string;
+  private _class: string;
+  private _background?: string;
+  private _overflow?: boolean;
+  private _overLayer: HTMLElement;
+  private _maxWidth?: number | null;
+  private _createWatchIn?: Function;
+  private _link: string;
 
   constructor(
     classElement: string,
     {
-      background = 'rgba(0,0,0,0.9)',
+      background = "rgba(0,0,0,0.9)",
       maxWidth = 90,
       overflow = false,
       createWatchIn = () => {},
     }: ConstructorObject
   ) {
-    this.class = classElement;
-    this.background = background;
-    this.overflow = overflow;
-    this.maxWidth = maxWidth;
-    this.createWatchIn = createWatchIn;
-    this.link = 'https://www.youtube.com';
+    this._class = classElement;
+    this._background = background;
+    this._overflow = overflow;
+    this._maxWidth = maxWidth;
+    this._createWatchIn = createWatchIn;
+    this._link = "https://www.youtube.com";
 
-    this.overLayer = addClass('div', 'ytLight');
-    let overLayer = this.overLayer;
-    document.body.appendChild(overLayer);
+    this._overLayer = addClass("div", "ytLight");
+    document.body.appendChild(this._overLayer);
 
-    this.initial();
+    this._initial();
   }
 
-  initial = () => {
-    const getYTLazy = document.querySelectorAll(`.${this.class}`);
+  _initial = () => {
+    const getYTLazy = document.querySelectorAll(`.${this._class}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
       const { id, openIn, title } = parseJson(
-        getYTLazy[i].getAttribute('data-yt')
+        getYTLazy[i].getAttribute("data-yt")
       );
 
-      setAttr(<HTMLElement>getYTLazy[i], {
-        style: `background-image:url('//i.ytimg.com/vi/${id}/sddefault.jpg');`,
-      });
+      // add image
+      <HTMLElement>getYTLazy[i].appendChild(this._createImage(id));
 
+      // add red button
       getYTLazy[i].appendChild(createRedButton());
 
       if (title ?? false) {
         const titleElement = `<div class="ytLazy__title">${title}</div><div class="ytLazy__gradient-top"></div>`;
-        getYTLazy[i].insertAdjacentHTML('beforeend', titleElement);
+        getYTLazy[i].insertAdjacentHTML("beforeend", titleElement);
       }
 
-      if (openIn && this.createWatchIn) {
-        this.createWatchIn({
-          link: this.link + '/watch?v=' + id,
+      if (openIn && this._createWatchIn) {
+        this._createWatchIn({
+          link: this._link + "/watch?v=" + id,
           template: (template: string) => {
-            getYTLazy[i].insertAdjacentHTML('beforeend', template);
+            getYTLazy[i].insertAdjacentHTML("beforeend", template);
           },
         });
       }
     }
 
-    this.handEvent();
+    this._handEvent();
   };
 
-  setLbox = (target: HTMLElement) => {
-    const watchIn = target.closest('.ytLazy__watch-in-link');
+  /**
+   *
+   * @param id - id video
+   * @returns {HTMLImageElement}
+   */
+  _createImage = (id: string): HTMLImageElement => {
+    const image = new Image();
+    image.className = "ytLazy__image";
+    image.loading = "lazy";
+    image.src = `//i.ytimg.com/vi/${id}/sddefault.jpg`;
+    return image;
+  };
+
+  /**
+   *
+   * @param target - target element
+   */
+  _setLightbox = (target: HTMLElement) => {
+    const watchIn = target.closest(".ytLazy__watch-in-link");
     if (watchIn) return;
 
-    const element = target.closest('.ytLazy__item');
+    const element = target.closest(".ytLazy__item");
 
-    if (element === null || element.className !== this.class) return;
+    if (element === null || element.className !== this._class) return;
 
-    const { id, local, maxWidth } = parseJson(element.getAttribute('data-yt'));
+    const { id, local, maxWidth } = parseJson(element.getAttribute("data-yt"));
     if (local) {
-      const frame = createIFrame(id, this.link);
-      setAttr(frame, {
-        width: '100%',
-        height: '100%',
+      const frame = createIFrame(id, this._link);
+      setAttribute(frame, {
+        width: "100%",
+        height: "100%",
       });
 
-      element.innerHTML = '';
+      element.innerHTML = "";
       element.appendChild(frame);
 
       return;
     } else {
-      this.lightbox({ id, maxWidth });
+      this._lightbox({ id, maxWidth });
     }
   };
 
-  closeLbox = () => {
-    const isOpen = document.querySelector('.is-open');
-    if (isOpen === null) return;
-    isOpen.innerHTML = '';
-    isOpen.classList.remove('is-open');
-    if (this.overflow) {
-      document.body.classList.remove('ytLight-active');
-    }
+  // close lightbox
+  _closeLightbox = () => {
+    const isOpen = document.querySelector(".ytLazy-is-open");
+    if (!isOpen) return;
+    isOpen.innerHTML = "";
+    isOpen.classList.remove("ytLazy-is-open");
+    this._overflow && document.body.classList.remove("ytLight-active");
   };
 
-  handClick = (event: Event) => {
+  _handClick = (event: Event) => {
     event.stopPropagation();
     const { target } = event;
 
-    this.closeLbox();
-    this.setLbox(<HTMLElement>target);
+    this._closeLightbox();
+    this._setLightbox(<HTMLElement>target);
   };
 
-  handKey = (event: KeyboardEvent) => {
-    if (event.key !== 'Escape') return;
-    this.setLbox(<HTMLElement>event.target);
-    this.closeLbox();
+  _handKey = (event: KeyboardEvent) => {
+    if (event.key !== "Escape") return;
+    this._setLightbox(<HTMLElement>event.target);
+    this._closeLightbox();
   };
 
-  handEvent = () => {
-    window.addEventListener('click', this.handClick);
-    window.addEventListener('keydown', this.handKey);
+  _handEvent = () => {
+    window.addEventListener("click", this._handClick);
+    window.addEventListener("keydown", this._handKey);
   };
 
-  lightbox = ({ id, maxWidth }: { id: string; maxWidth: string }) => {
-    if (this.overflow) {
-      document.body.classList.add('ytLight-active');
+  _lightbox = ({ id, maxWidth }: { id: string; maxWidth: string }) => {
+    if (this._overflow) {
+      document.body.classList.add("ytLight-active");
     }
 
-    const button = addClass('button', 'ytLight-close');
-    setAttr(button, {
-      type: 'button',
-      title: 'close movie',
+    const button = addClass("button", "ytLight-close");
+    setAttribute(button, {
+      type: "button",
+      title: "close movie",
     });
 
-    const wrap = addClass('div', 'ytLight-wrap');
-    const container = addClass('div', 'ytLight-container');
+    const wrap = addClass("div", "ytLight-wrap");
+    const container = addClass("div", "ytLight-container");
 
-    (this.maxWidth || maxWidth) &&
-      setAttr(container, {
-        style: `max-width: ${maxWidth || this.maxWidth}%`,
+    (this._maxWidth || maxWidth) &&
+      setAttribute(container, {
+        style: `max-width: ${maxWidth || this._maxWidth}%`,
       });
 
-    const iframCointainer = addClass('div', 'ytLight-iframe');
+    const iframCointainer = addClass("div", "ytLight-iframe");
 
-    iframCointainer.appendChild(createIFrame(id, this.link));
+    iframCointainer.appendChild(createIFrame(id, this._link));
     container.appendChild(iframCointainer);
     wrap.appendChild(container);
 
-    iframCointainer.insertAdjacentElement('afterend', button);
+    iframCointainer.insertAdjacentElement("afterend", button);
 
-    let overlay = this.overLayer;
-    overlay.appendChild(wrap);
-    overlay.classList.add('is-open');
-    overlay.setAttribute('style', `background:${this.background};`);
+    this._overLayer.appendChild(wrap);
+    this._overLayer.classList.add("ytLazy-is-open");
+    this._overLayer.setAttribute("style", `background:${this._background};`);
   };
 }
