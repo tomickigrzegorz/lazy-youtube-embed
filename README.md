@@ -39,10 +39,10 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.1/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.1/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -56,19 +56,19 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 
 ```html
 <!-- default -->
-<div class="ytLazy__item" data-yt='{ "id":"TUIbj4mviXU" }'></div>
+<div class="ytLazy__item" data-yt='{ "id": "TUIbj4mviXU" }'></div>
 
 <!-- open in same place what thumbnail is -->
-<div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "local": true }'></div>
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "local": true }'></div>
 
 <!-- set max-width -->
-<div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "maxWidth": 50 }'></div>
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "maxWidth": 50 }'></div>
 
 <!-- add button "Watch in ..." -->
-<div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "openIn": true }'></div>
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "openIn": true }'></div>
 
 <!-- add title -->
-<div class="ytLazy__item" data-yt='{ "id":"XHeDps0fX6c", "title": "Movie title ;)" }'></div>
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "title": "Movie title ;)" }'></div>
 ```
 > off course you can mix all of them
 
@@ -119,7 +119,9 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 </script>
 ```
 
-## IE10+
+## Browser support
+
+youtubeLazy supports all major browsers including IE 11 and above.
 
 If you need IE support, add this pollyfil to html
 
@@ -133,8 +135,16 @@ If you need IE support, add this pollyfil to html
 </script>
 ```
 
-## Browsers support
+### local files
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/vivaldi/vivaldi_48x48.png" alt="Vivaldi" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Vivaldi |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| IE10, IE11, Edge                                                                                                                                                                                                | last 2 versions                                                                                                                                                                                                   | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                           | last 2 versions                                                                                                                                                                                                   |
+- dist/js/youtubeLazy.ie.min.js
+- dist/css/youtubeLazy.min.css
+
+### cdn
+
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/css/youtubeLazy.min.css
+
+## License
+
+This project is available under the [MIT](https://opensource.org/licenses/mit-license.php) license.
