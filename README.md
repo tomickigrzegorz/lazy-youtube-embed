@@ -138,12 +138,12 @@ If you need IE support, add this pollyfil to html
 ### local files
 
 - dist/js/youtubeLazy.ie.min.js
-- dist/css/youtubeLazy.min.css
+- dist/css/youtubeLazy.ie.min.css
 
 ### cdn
 
 - https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/css/youtubeLazy.min.css
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/css/youtubeLazy.ie.min.css
 
 ## License
 
