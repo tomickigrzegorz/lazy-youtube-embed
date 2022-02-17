@@ -7,10 +7,10 @@
     <title>lazy load youtube</title>
     <script type="text/javascript">
       if (window.Element && !Element.prototype.closest) {
-        var script = document.createElement('script');
+        var script = document.createElement("script");
         script.src =
-          'https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.closest';
-        document.getElementsByTagName('head')[0].appendChild(script);
+          "https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.closest";
+        document.getElementsByTagName("head")[0].appendChild(script);
       }
     </script>
     <link rel="stylesheet" href="./css/global.css" />
@@ -63,18 +63,17 @@
     <script>
       // ytLazy__item youtube class div
       // document.addEventListener('DOMContentLoaded', new ytLazy('ytLazy__item'));
-      new ytLazy('ytLazy__item', {
+      new ytLazy("ytLazy__item", {
         // you can add color with opacity, default: 'rgba(0,0,0,0.9)'
         // rgba, hsla
-        background: 'rgba(0,0,0,0.9)',
+        background: "rgba(0,0,0,0.9)",
 
         // a global setter for all max-width movies
         // default 90%
         maxWidth: 80,
 
         // hide overflow to body
-        // when open lightbox
-        // default false
+        // when open lightbox - default false
         // overflow: true,
 
         // create your own button to open youtube video page
