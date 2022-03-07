@@ -9,11 +9,12 @@ import {
 export default class ytLazy {
   private _class: string;
   private _background?: string;
+  private _picture?: boolean;
   private _overflow?: boolean;
   private _overLayer: HTMLElement;
   private _maxWidth?: number | null;
-  private _createWatchIn?: Function;
   private _link: string;
+  private _createWatchIn?: Function;
 
   constructor(
     classElement: string,
@@ -21,12 +22,14 @@ export default class ytLazy {
       background = "rgba(0,0,0,0.9)",
       maxWidth = 90,
       overflow = false,
+      picture = false,
       createWatchIn = () => {},
     }: ConstructorObject
   ) {
     this._class = classElement;
     this._background = background;
     this._overflow = overflow;
+    this._picture = picture;
     this._maxWidth = maxWidth;
     this._createWatchIn = createWatchIn;
     this._link = "https://www.youtube.com";
@@ -41,12 +44,12 @@ export default class ytLazy {
     const getYTLazy = document.querySelectorAll(`.${this._class}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
-      const { id, openIn, title } = parseJson(
+      const { id, openIn, title, picture } = parseJson(
         getYTLazy[i].getAttribute("data-yt")
       );
 
       // add image
-      <HTMLElement>getYTLazy[i].appendChild(this._createImage(id));
+      getYTLazy[i].appendChild(this._createImage(id, picture));
 
       // add red button
       getYTLazy[i].appendChild(createRedButton());
@@ -70,16 +73,68 @@ export default class ytLazy {
   };
 
   /**
+   * Create image or picture width image
    *
    * @param id - id video
    * @returns {HTMLImageElement}
    */
-  _createImage = (id: string): HTMLImageElement => {
+  _createImage = (id: string, pic: string | null): any => {
+    const sourcesArray: ConfigObject[] = [
+      {
+        media: "(min-width: 1440px)",
+        srcset: this._sourceURL(id, "maxresdefault"),
+      },
+      {
+        media: "(min-width: 1024px)",
+        srcset: this._sourceURL(id, "hqdefault"),
+      },
+      {
+        media: "(min-width: 480px)",
+        srcset: this._sourceURL(id, "mqdefault"),
+      },
+    ];
+
+    const picture = this._createElement("picture");
+    sourcesArray.map((element: ConfigObject) => {
+      picture.appendChild(this._createElement("source", element));
+    });
+
     const image = new Image();
     image.className = "ytLazy__image";
     image.loading = "lazy";
-    image.src = `//i.ytimg.com/vi/${id}/sddefault.jpg`;
-    return image;
+    image.width = 1050;
+    image.height = 787;
+    image.src = this._sourceURL(id, "sddefault");
+
+    picture.appendChild(image);
+
+    return this._picture || pic ? picture : image;
+  };
+
+  /**
+   * Image url
+   *
+   * @param id - movie
+   * @param type - image size
+   * @returns {HTMLImageElement}
+   */
+  _sourceURL = (id: string, type: string): string => {
+    return `//i.ytimg.com/vi/${id}/${type}.jpg`;
+  };
+
+  /**
+   * Create picure or source element
+   *
+   * @param el - type of element
+   * @param config - config element
+   * @returns {HTMLImageElement}
+   */
+  _createElement = (el: string, config?: ConfigObject): HTMLElement => {
+    const element = document.createElement(el);
+    if (config) {
+      setAttribute(element, config);
+    }
+    return element;
   };
 
   /**
