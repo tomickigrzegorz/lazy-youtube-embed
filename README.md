@@ -70,6 +70,9 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 
 <!-- add title -->
 <div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "title": "Movie title ;)" }'></div>
+
+<!-- add picture -->
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "picture": true }'></div>
 ```
 > off course you can mix all of them
 
