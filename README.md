@@ -39,10 +39,10 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -53,6 +53,7 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 - **"maxWidth": 50** - the video opens to the given width, it is a percentage, in this example 50%, if there is no number then the video opens to the whole window - 100%. You can also set a global `maxWidth` for all videos that open in the lightbox. Just add the same `maxWidth: 80` parameter to option, see the example below
 - **"openIn"** - this parameter allows you to display a button which, when clicked, directly opens the youtube page with the movie. For full functionality you need the corresponding parameter also added to js, see below `createWatchIn: () => {}`
 - **"title"** - the title of the video, it is displayed top of container`
+- **"picture"** - the parameter is responsible for generating a thumbnail. `TRUE` - generates picture + source + img. `FALSE` - only generate an img thumbnail
 
 ```html
 <!-- default -->
@@ -69,6 +70,9 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 
 <!-- add title -->
 <div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "title": "Movie title ;)" }'></div>
+
+<!-- add picture -->
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "picture": true }'></div>
 ```
 > off course you can mix all of them
 
@@ -97,6 +101,9 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
     // hide overflow to body when open lightbox
     // default false
     overflow: true,
+
+    // genereate picture > source
+    picture: true,
 
     // create your own button to open youtube video page
     createWatchIn: ({ link, template }) => {
@@ -142,8 +149,8 @@ If you need IE support, add this pollyfil to html
 
 ### cdn
 
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.2/dist/css/youtubeLazy.ie.min.css
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/css/youtubeLazy.ie.min.css
 
 ## License
 
