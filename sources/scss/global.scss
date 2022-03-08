@@ -17,24 +17,20 @@ body {
 }
 
 .content {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   padding: 5px;
   gap: 5px;
 }
 
-.content > div {
-  flex: 1 1 30%;
-}
-
-@media (max-width: 1680px) {
-  .content > div {
-    flex: 1 1 40%;
+@media (min-width: 600px) {
+  .content {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 600px) {
-  .content > div {
-    flex: 1 1 100%;
+@media (min-width: 1680px) {
+  .content {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

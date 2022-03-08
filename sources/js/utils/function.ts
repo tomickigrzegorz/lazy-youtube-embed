@@ -1,21 +1,28 @@
 /**
- * @param type - set div, a, span, button, etc.
- * @param name - class name
- * @returns
+ * Create picure or source element
+ *
+ * @param el - type of element
+ * @param config - config element
+ * @returns {HTMLElement}
  */
-const addClass = (type: string, name: string) => {
-  const element = document.createElement(type);
-  element.className = name;
+const createElement = (el: string, config?: object | string): HTMLElement => {
+  const element = document.createElement(el);
+  if (config) {
+    setAttribute(
+      element,
+      typeof config === "string" ? { class: config } : config
+    );
+  }
   return element;
 };
 
 /**
- * @param el - element html
- * @param attrs - attributes
+ * @param element - element html
+ * @param config - attributes
  */
-const setAttribute = (el: HTMLElement, attrs: any) => {
-  for (var key in attrs) {
-    el.setAttribute(key, attrs[key]);
+const setAttribute = (element: HTMLElement, config?: LooseObject) => {
+  for (var key in config) {
+    element.setAttribute(key, config[key]);
   }
 };
 
@@ -25,31 +32,8 @@ const setAttribute = (el: HTMLElement, attrs: any) => {
 const parseJson = (object: any) => JSON.parse(object);
 
 /**
- * @param id - id video
- * @param link - link to video
- */
-const createIFrame = (id: string, link: string) => {
-  const iframe = addClass("iframe", "");
-  setAttribute(iframe, {
-    frameborder: "0",
-    allowfullscreen: "true",
-    allow:
-      "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;",
-    src: `${link}/embed/${id}?autoplay=1`,
-  });
-
-  return iframe;
-};
-
-/**
  * @returns red button
  */
-const createRedButton = () => {
-  const buttonW = addClass("div", "ytLazy__thumbnail");
-  const buttonS = addClass("div", "ytLazy__img ytLazy__img--svg");
+const createRedButton = () => createElement("div", "ytLazy__img--svg");
 
-  buttonW.appendChild(buttonS);
-  return buttonW;
-};
-
-export { addClass, setAttribute, parseJson, createIFrame, createRedButton };
+export { createElement, setAttribute, parseJson, createRedButton };

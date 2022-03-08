@@ -3,15 +3,15 @@
  </h1>
 
 <p align="center">
-  Lazy loading youtube on lightbox
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/github/package-json/v/tomik23/lazy-youtube">
   <img src="https://img.shields.io/github/size/tomik23/lazy-youtube/dist/js/youtubeLazy.min.js">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-green.svg">
   </a>
+</p>
+
+<p align="center">
+  The script prevents all files from being downloaded from yotube while the page is loading. Only by clicking on the appropriate movie, you recharge the necessary codes to display the movie. It's also possible to put a movie on a layer and a few other options to control the appearance - all info below.
 </p>
 
 <p align="center">
@@ -39,17 +39,17 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
 ### Add a div with the appropriate json
 
 - **"id": "TUIbj4mviXU"** - id is the id of the movie you can find it in every youtube link
-- **"local": true** - parameter that tells the library that the movie should play in the same div as the thumbnail, not in the lightbox
+- **"local": true** - parameter that tells the library that the movie should play in the same div as the thumbnail, not in the lightbox, default: true for all videos
 - **"maxWidth": 50** - the video opens to the given width, it is a percentage, in this example 50%, if there is no number then the video opens to the whole window - 100%. You can also set a global `maxWidth` for all videos that open in the lightbox. Just add the same `maxWidth: 80` parameter to option, see the example below
 - **"openIn"** - this parameter allows you to display a button which, when clicked, directly opens the youtube page with the movie. For full functionality you need the corresponding parameter also added to js, see below `createWatchIn: () => {}`
 - **"title"** - the title of the video, it is displayed top of container`
@@ -59,8 +59,8 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 <!-- default -->
 <div class="ytLazy__item" data-yt='{ "id": "TUIbj4mviXU" }'></div>
 
-<!-- open in same place what thumbnail is -->
-<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "local": true }'></div>
+<!-- open the movie in lightbox layer -->
+<div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "local": false }'></div>
 
 <!-- set max-width -->
 <div class="ytLazy__item" data-yt='{ "id": "XHeDps0fX6c", "maxWidth": 50 }'></div>
@@ -101,12 +101,19 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
     // hide overflow to body when open lightbox
     // default false
     overflow: true,
+    
+    // open the movie in a local place
+    // default local: true
+    local: false,
 
     // genereate picture > source
     picture: true,
 
     // create your own button to open youtube video page
-    createWatchIn: ({ link, template }) => {
+    createWatchIn: ({ index, link, template }) => {
+      // based on the index, you can insert 
+      // a different template with the button's
+      // appearance or color change
       template(`
         <div class="ytLazy__watch-in">
           <a href='${link}' class="ytLazy__watch-in-link" target="_blank">
@@ -149,8 +156,8 @@ If you need IE support, add this pollyfil to html
 
 ### cdn
 
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.3/dist/css/youtubeLazy.ie.min.css
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/css/youtubeLazy.ie.min.css
 
 ## License
 

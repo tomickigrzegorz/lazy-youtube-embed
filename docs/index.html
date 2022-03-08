@@ -40,12 +40,18 @@
         class="ytLazy__item"
         data-yt='{ "id": "XHeDps0fX6c", "local": true }'
       ></div>
-      <div class="ytLazy__item" data-yt='{ "id": "TUIbj4mviXU" }'></div>
+      <div
+        class="ytLazy__item"
+        data-yt='{ "id": "TUIbj4mviXU", "openIn": true }'
+      ></div>
       <div
         class="ytLazy__item"
         data-yt='{ "id": "F-1weFCiYBA", "title": "ELEMENTS OF ICELAND - 4", "openIn": true }'
       ></div>
-      <div class="ytLazy__item" data-yt='{ "id": "1La4QzGeaaQ" }'></div>
+      <div
+        class="ytLazy__item"
+        data-yt='{ "id": "1La4QzGeaaQ", "local": true }'
+      ></div>
       <div class="ytLazy__item" data-yt='{ "id": "vr0qNXmkUJ8" }'></div>
       <div class="ytLazy__item" data-yt='{ "id": "ekz6i58kVpI" }'></div>
       <div class="ytLazy__item" data-yt='{ "id": "ChOhcHD8fBA" }'></div>
@@ -64,7 +70,8 @@
       // ytLazy__item youtube class div
       // document.addEventListener('DOMContentLoaded', new ytLazy('ytLazy__item'));
       new ytLazy("ytLazy__item", {
-        // you can add color with opacity, default: 'rgba(0,0,0,0.9)'
+        // you can add color with opacity,
+        // default: 'rgba(0,0,0,0.9)'
         // rgba, hsla
         background: "rgba(0,0,0,0.9)",
 
@@ -76,11 +83,18 @@
         // when open lightbox - default false
         // overflow: true,
 
+        // open the movie in a local place
+        // default local: true
+        local: false,
+
         // genereate picture > source
         picture: true,
 
         // create your own button to open youtube video page
-        createWatchIn: ({ link, template }) => {
+        createWatchIn: ({ index, link, template }) => {
+          // based on the index, you can insert
+          // a different template with the button's
+          // appearance or color change
           template(`
             <div class="ytLazy__watch-in">
               <a href='${link}' class="ytLazy__watch-in-link" target="_blank">

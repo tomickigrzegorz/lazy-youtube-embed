@@ -1,19 +1,19 @@
 import {
-  addClass,
-  setAttribute,
-  parseJson,
-  createIFrame,
+  createElement,
   createRedButton,
+  parseJson,
+  setAttribute,
 } from "./utils/function";
 
 export default class ytLazy {
-  private _class: string;
+  private _className: string;
+  private _overLayer: HTMLElement;
+  private _link: string;
   private _background?: string;
   private _picture?: boolean;
+  private _local?: boolean;
   private _overflow?: boolean;
-  private _overLayer: HTMLElement;
-  private _maxWidth?: number | null;
-  private _link: string;
+  private _maxWidth?: number;
   private _createWatchIn?: Function;
 
   constructor(
@@ -22,26 +22,29 @@ export default class ytLazy {
       background = "rgba(0,0,0,0.9)",
       maxWidth = 90,
       overflow = false,
+      local = true,
       picture = false,
       createWatchIn = () => {},
     }: ConstructorObject
   ) {
-    this._class = classElement;
+    this._className = classElement;
     this._background = background;
+    this._local = local;
     this._overflow = overflow;
     this._picture = picture;
     this._maxWidth = maxWidth;
     this._createWatchIn = createWatchIn;
     this._link = "https://www.youtube.com";
 
-    this._overLayer = addClass("div", "ytLight");
+    this._overLayer = createElement("div", "ytLight");
+
     document.body.appendChild(this._overLayer);
 
     this._initial();
   }
 
   _initial = () => {
-    const getYTLazy = document.querySelectorAll(`.${this._class}`);
+    const getYTLazy = document.querySelectorAll(`.${this._className}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
       const { id, openIn, title, picture } = parseJson(
@@ -55,12 +58,18 @@ export default class ytLazy {
       getYTLazy[i].appendChild(createRedButton());
 
       if (title ?? false) {
-        const titleElement = `<div class="ytLazy__title">${title}</div><div class="ytLazy__gradient-top"></div>`;
-        getYTLazy[i].insertAdjacentHTML("beforeend", titleElement);
+        const titleElement = createElement("div", "ytLazy__title");
+        titleElement.textContent = title;
+        getYTLazy[i].insertAdjacentElement("beforeend", titleElement);
+        titleElement.insertAdjacentElement(
+          "afterend",
+          createElement("div", "ytLazy__gradient-top")
+        );
       }
 
       if (openIn && this._createWatchIn) {
         this._createWatchIn({
+          index: i,
           link: this._link + "/watch?v=" + id,
           template: (template: string) => {
             getYTLazy[i].insertAdjacentHTML("beforeend", template);
@@ -78,7 +87,7 @@ export default class ytLazy {
    * @param id - id video
    * @returns {HTMLImageElement}
    */
-  _createImage = (id: string, pic: string | null): any => {
+  _createImage = (id: string, pic: string | null): HTMLElement => {
     const sourcesArray: ConfigObject[] = [
       {
         media: "(min-width: 1440px)",
@@ -94,9 +103,9 @@ export default class ytLazy {
       },
     ];
 
-    const picture = this._createElement("picture");
-    sourcesArray.map((element: ConfigObject) => {
-      picture.appendChild(this._createElement("source", element));
+    const picture = createElement("picture");
+    sourcesArray.map((element: object) => {
+      picture.appendChild(createElement("source", element));
     });
 
     const image = new Image();
@@ -123,21 +132,6 @@ export default class ytLazy {
   };
 
   /**
-   * Create picure or source element
-   *
-   * @param el - type of element
-   * @param config - config element
-   * @returns {HTMLImageElement}
-   */
-  _createElement = (el: string, config?: ConfigObject): HTMLElement => {
-    const element = document.createElement(el);
-    if (config) {
-      setAttribute(element, config);
-    }
-    return element;
-  };
-
-  /**
    *
    * @param target - target element
    */
@@ -147,17 +141,18 @@ export default class ytLazy {
 
     const element = target.closest(".ytLazy__item");
 
-    if (element === null || element.className !== this._class) return;
+    if (element === null || element.className !== this._className) return;
 
     const { id, local, maxWidth } = parseJson(element.getAttribute("data-yt"));
-    if (local) {
-      const frame = createIFrame(id, this._link);
+
+    if (local ?? this._local) {
+      const frame = createElement("iframe", this._objectIframe(id, this._link));
       setAttribute(frame, {
         width: "100%",
         height: "100%",
       });
 
-      element.innerHTML = "";
+      element.textContent = "";
       element.appendChild(frame);
 
       return;
@@ -170,7 +165,7 @@ export default class ytLazy {
   _closeLightbox = () => {
     const isOpen = document.querySelector(".ytLazy-is-open");
     if (!isOpen) return;
-    isOpen.innerHTML = "";
+    isOpen.textContent = "";
     isOpen.classList.remove("ytLazy-is-open");
     this._overflow && document.body.classList.remove("ytLight-active");
   };
@@ -194,28 +189,40 @@ export default class ytLazy {
     window.addEventListener("keydown", this._handKey);
   };
 
-  _lightbox = ({ id, maxWidth }: { id: string; maxWidth: string }) => {
+  _objectIframe = (id: string, link: string): object => {
+    return {
+      frameborder: "0",
+      allowfullscreen: "true",
+      allow:
+        "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;",
+      src: `${link}/embed/${id}?autoplay=1`,
+    };
+  };
+
+  _lightbox = ({ id, maxWidth }: lightboxObject) => {
     if (this._overflow) {
       document.body.classList.add("ytLight-active");
     }
 
-    const button = addClass("button", "ytLight-close");
+    const button = createElement("button", "ytLight-close");
     setAttribute(button, {
       type: "button",
       title: "close movie",
     });
 
-    const wrap = addClass("div", "ytLight-wrap");
-    const container = addClass("div", "ytLight-container");
+    const wrap = createElement("div", "ytLight-wrap");
+    const container = createElement("div", "ytLight-container");
 
     (this._maxWidth || maxWidth) &&
       setAttribute(container, {
         style: `max-width: ${maxWidth || this._maxWidth}%`,
       });
 
-    const iframCointainer = addClass("div", "ytLight-iframe");
+    const iframCointainer = createElement("div", "ytLight-iframe");
 
-    iframCointainer.appendChild(createIFrame(id, this._link));
+    iframCointainer.appendChild(
+      createElement("iframe", this._objectIframe(id, this._link))
+    );
     container.appendChild(iframCointainer);
     wrap.appendChild(container);
 
