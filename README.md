@@ -20,7 +20,7 @@
 
 ## Demo
 
-See the demo - [example](https://tomik23.github.io/lazy-youtube/)
+See the demo - [example](https://tomik23.github.io/lazy-youtube-embed/)
 
 > close the lightbox by pressing the ESC key
 
@@ -39,10 +39,10 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -156,8 +156,8 @@ If you need IE support, add this pollyfil to html
 
 ### cdn
 
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube@1.1.4/dist/css/youtubeLazy.ie.min.css
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/css/youtubeLazy.ie.min.css
 
 ## License
 
