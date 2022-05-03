@@ -39,10 +39,10 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube-embed/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.5/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.5/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -54,6 +54,8 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube-embed/)
 - **"openIn"** - this parameter allows you to display a button which, when clicked, directly opens the youtube page with the movie. For full functionality you need the corresponding parameter also added to js, see below `createWatchIn: () => {}`
 - **"title"** - the title of the video, it is displayed top of container`
 - **"picture"** - the parameter is responsible for generating a thumbnail. `TRUE` - generates picture + source + img. `FALSE` - only generate an img thumbnail
+- **onResize** - this function allows you to change the way the movie is started. We check the width of the window, in the example we set it to 800px, if this value is smaller than assumed, the movie will open in the same place without a lightbox, if greater than 800px, we will open the movie in the lighbox.
+
 
 ```html
 <!-- default -->
@@ -122,7 +124,23 @@ See the demo - [example](https://tomik23.github.io/lazy-youtube-embed/)
           </a>
         </div>
       `)
-    }
+    },
+    onResize: () => {
+      let responsiveMin = 800;
+
+      // we check the width of the browser window
+      const windowWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+
+      // we return the logical value "true/false"
+      // if "true" then the movie is opened in the place 
+      // of display, if "false" the movie is opened in lightbox
+      const widthWindow = windowWidth < responsiveMin ? true : false;
+
+      return widthWindow;
+    },
   };
 
   // ytLazy__item youtube class div with options
@@ -156,8 +174,8 @@ If you need IE support, add this pollyfil to html
 
 ### cdn
 
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.4/dist/css/youtubeLazy.ie.min.css
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.5/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomik23/lazy-youtube-embed@1.1.5/dist/css/youtubeLazy.ie.min.css
 
 ## License
 
