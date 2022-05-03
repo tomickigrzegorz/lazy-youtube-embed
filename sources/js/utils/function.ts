@@ -36,4 +36,18 @@ const parseJson = (object: any) => JSON.parse(object);
  */
 const createRedButton = () => createElement("div", "ytLazy__img--svg");
 
-export { createElement, setAttribute, parseJson, createRedButton };
+/**
+ * @function debounce - debounce function
+ *
+ * @param {Function} fn function
+ * @param {Number} ms time
+ */
+const debounce = (fn: Function, ms = 300) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+  };
+};
+
+export { createElement, setAttribute, parseJson, debounce, createRedButton };

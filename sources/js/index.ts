@@ -2,6 +2,7 @@ import {
   createElement,
   createRedButton,
   parseJson,
+  debounce,
   setAttribute,
 } from "./utils/function";
 
@@ -14,7 +15,8 @@ export default class ytLazy {
   private _local?: boolean;
   private _overflow?: boolean;
   private _maxWidth?: number;
-  private _createWatchIn?: Function;
+  private _createWatchIn: Function;
+  private _onResize: Function;
 
   constructor(
     classElement: string,
@@ -24,6 +26,7 @@ export default class ytLazy {
       overflow = false,
       local = true,
       picture = false,
+      onResize = () => {},
       createWatchIn = () => {},
     }: ConstructorObject
   ) {
@@ -34,6 +37,7 @@ export default class ytLazy {
     this._picture = picture;
     this._maxWidth = maxWidth;
     this._createWatchIn = createWatchIn;
+    this._onResize = onResize;
     this._link = "https://www.youtube.com";
 
     this._overLayer = createElement("div", "ytLight");
@@ -187,6 +191,15 @@ export default class ytLazy {
   _handEvent = () => {
     window.addEventListener("click", this._handClick);
     window.addEventListener("keydown", this._handKey);
+
+    window.addEventListener(
+      "DOMContentLoaded",
+      () => (this._local = this._onResize())
+    );
+    window.addEventListener(
+      "resize",
+      debounce(() => (this._local = this._onResize()), 70)
+    );
   };
 
   _objectIframe = (id: string, link: string): object => {

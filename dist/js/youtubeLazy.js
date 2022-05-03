@@ -15,9 +15,16 @@ var ytLazy = (function () {
     };
     const parseJson = (object) => JSON.parse(object);
     const createRedButton = () => createElement("div", "ytLazy__img--svg");
+    const debounce = (fn, ms = 300) => {
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => fn.apply(this, args), ms);
+        };
+    };
 
     class ytLazy {
-        constructor(classElement, { background = "rgba(0,0,0,0.9)", maxWidth = 90, overflow = false, local = true, picture = false, createWatchIn = () => { }, }) {
+        constructor(classElement, { background = "rgba(0,0,0,0.9)", maxWidth = 90, overflow = false, local = true, picture = false, onResize = () => { }, createWatchIn = () => { }, }) {
             this._initial = () => {
                 const getYTLazy = document.querySelectorAll(`.${this._className}`);
                 for (let i = 0; i < getYTLazy.length; i++) {
@@ -118,6 +125,8 @@ var ytLazy = (function () {
             this._handEvent = () => {
                 window.addEventListener("click", this._handClick);
                 window.addEventListener("keydown", this._handKey);
+                window.addEventListener("DOMContentLoaded", () => (this._local = this._onResize()));
+                window.addEventListener("resize", debounce(() => (this._local = this._onResize()), 70));
             };
             this._objectIframe = (id, link) => {
                 return {
@@ -158,6 +167,7 @@ var ytLazy = (function () {
             this._picture = picture;
             this._maxWidth = maxWidth;
             this._createWatchIn = createWatchIn;
+            this._onResize = onResize;
             this._link = "https://www.youtube.com";
             this._overLayer = createElement("div", "ytLight");
             document.body.appendChild(this._overLayer);

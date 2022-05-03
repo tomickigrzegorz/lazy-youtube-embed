@@ -5,6 +5,7 @@ interface ConstructorObject {
   local?: boolean;
   picture?: boolean;
   createWatchIn?: () => void;
+  onResize?: () => void;
 }
 
 interface ConfigObject {
