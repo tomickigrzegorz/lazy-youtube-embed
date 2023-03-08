@@ -3,8 +3,8 @@
  </h1>
 
 <p align="center">
-  <img src="https://img.shields.io/github/package-json/v/tomickigrzegorz/lazy-youtube">
-  <img src="https://img.shields.io/github/size/tomickigrzegorz/lazy-youtube/dist/js/youtubeLazy.min.js">
+  <img src="https://img.shields.io/github/package-json/v/tomickigrzegorz/lazy-youtube-embed">
+  <img src="https://img.shields.io/github/size/tomickigrzegorz/lazy-youtube-embed/dist/js/youtubeLazy.min.js">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-green.svg">
   </a>
