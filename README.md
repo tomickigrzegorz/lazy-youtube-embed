@@ -39,10 +39,10 @@ See the demo - [example](https://tomickigrzegorz.github.io/lazy-youtube-embed/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.5/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.6/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.5/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.6/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -174,8 +174,8 @@ If you need IE support, add this pollyfil to html
 
 ### cdn
 
-- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.5/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.5/dist/css/youtubeLazy.ie.min.css
+- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.6/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.6/dist/css/youtubeLazy.ie.min.css
 
 ## License
 
