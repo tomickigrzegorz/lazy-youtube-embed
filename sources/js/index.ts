@@ -145,7 +145,8 @@ export default class ytLazy {
 
     const element = target.closest(".ytLazy__item");
 
-    if (element === null || element.className !== this._className) return;
+    if (element === null || !element.classList.contains(this._className))
+      return;
 
     const { id, local, maxWidth } = parseJson(element.getAttribute("data-yt"));
 
