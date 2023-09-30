@@ -82,7 +82,7 @@ class ytLazy {
             if (watchIn)
                 return;
             const element = target.closest(".ytLazy__item");
-            if (element === null || element.className !== this._className)
+            if (element === null || !element.classList.contains(this._className))
                 return;
             const { id, local, maxWidth } = parseJson(element.getAttribute("data-yt"));
             if (local !== null && local !== void 0 ? local : this._local) {
