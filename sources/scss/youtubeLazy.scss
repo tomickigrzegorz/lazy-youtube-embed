@@ -259,3 +259,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.ytLazy__zoom-animation picture {
+  transition: transform 0.5s ease-in-out;
+}
+
+.ytLazy__zoom-animation:hover picture {
+  transform: scale(1.2);
+}
