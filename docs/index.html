@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -45,11 +45,11 @@
         data-yt='{ "id": "TUIbj4mviXU", "openIn": true }'
       ></div>
       <div
-        class="ytLazy__item"
+        class="ytLazy__item ytLazy__zoom-animation"
         data-yt='{ "id": "F-1weFCiYBA", "title": "ELEMENTS OF ICELAND - 4", "openIn": true }'
       ></div>
       <div
-        class="ytLazy__item"
+        class="ytLazy__item ytLazy__zoom-animation"
         data-yt='{ "id": "1La4QzGeaaQ", "local": true }'
       ></div>
       <div class="ytLazy__item" data-yt='{ "id": "vr0qNXmkUJ8" }'></div>
@@ -105,17 +105,13 @@
           `);
         },
         onResize: () => {
-          let responsiveMin = 800;
+          const mediaQueryList = window.matchMedia("(max-width: 800px)");
 
-          // we check the width of the browser window
-          const windowWidth =
-            window.innerWidth ||
-            document.documentElement.clientWidth ||
-            document.body.clientWidth;
+          console.log("mediaQueryList.matches", mediaQueryList.matches);
 
-          const widthWindow = windowWidth < responsiveMin ? true : false;
+          const maxWidth = mediaQueryList.matches ? true : false;
 
-          return widthWindow;
+          return maxWidth;
         },
       });
     </script>
