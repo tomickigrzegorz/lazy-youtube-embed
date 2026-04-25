@@ -16,7 +16,15 @@
             element.setAttribute(key, config[key]);
         }
     };
-    const parseJson = (object) => JSON.parse(object);
+    const parseJson = (object) => {
+        try {
+            return JSON.parse(object);
+        }
+        catch (_a) {
+            console.error("ytLazy: invalid JSON in data-yt attribute:", object);
+            return null;
+        }
+    };
     const createRedButton = () => createElement("div", "ytLazy__img--svg");
     const debounce = (fn, ms = 300) => {
         let timeoutId;
@@ -27,11 +35,14 @@
     };
 
     class ytLazy {
-        constructor(classElement, { background = "rgba(0,0,0,0.9)", maxWidth = 90, overflow = false, local = true, picture = false, onResize = () => { }, createWatchIn = () => { }, }) {
+        constructor(classElement, { background = "rgba(0,0,0,0.9)", maxWidth = 90, overflow = false, local = true, picture = false, onResize = () => undefined, createWatchIn = () => { }, } = {}) {
             this._initial = () => {
                 const getYTLazy = document.querySelectorAll(`.${this._className}`);
                 for (let i = 0; i < getYTLazy.length; i++) {
-                    const { id, openIn, title, picture } = parseJson(getYTLazy[i].getAttribute("data-yt"));
+                    const parsed = parseJson(getYTLazy[i].getAttribute("data-yt"));
+                    if (!parsed)
+                        continue;
+                    const { id, openIn, title, picture } = parsed;
                     getYTLazy[i].appendChild(this._createImage(id, picture));
                     getYTLazy[i].appendChild(createRedButton());
                     if (title !== null && title !== void 0 ? title : false) {
@@ -68,7 +79,7 @@
                     },
                 ];
                 const picture = createElement("picture");
-                sourcesArray.map((element) => {
+                sourcesArray.forEach((element) => {
                     picture.appendChild(createElement("source", element));
                 });
                 const image = new Image();
@@ -90,7 +101,10 @@
                 const element = target.closest(".ytLazy__item");
                 if (element === null || !element.classList.contains(this._className))
                     return;
-                const { id, local, maxWidth } = parseJson(element.getAttribute("data-yt"));
+                const parsed = parseJson(element.getAttribute("data-yt"));
+                if (!parsed)
+                    return;
+                const { id, local, maxWidth } = parsed;
                 if (local !== null && local !== void 0 ? local : this._local) {
                     const frame = createElement("iframe", this._objectIframe(id, this._link));
                     setAttribute(frame, {
@@ -128,7 +142,7 @@
             this._handEvent = () => {
                 window.addEventListener("click", this._handClick);
                 window.addEventListener("keydown", this._handKey);
-                window.addEventListener("DOMContentLoaded", () => (this._local = this._onResize()));
+                this._local = this._onResize();
                 window.addEventListener("resize", debounce(() => (this._local = this._onResize()), 70));
             };
             this._objectIframe = (id, link) => {

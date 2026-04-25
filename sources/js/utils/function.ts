@@ -10,7 +10,7 @@ const createElement = (el: string, config?: object | string): HTMLElement => {
   if (config) {
     setAttribute(
       element,
-      typeof config === "string" ? { class: config } : config
+      typeof config === "string" ? { class: config } : config,
     );
   }
   return element;
@@ -29,7 +29,14 @@ const setAttribute = (element: HTMLElement, config?: LooseObject) => {
 /**
  * @param object - object
  */
-const parseJson = (object: any) => JSON.parse(object);
+const parseJson = (object: any): Record<string, any> | null => {
+  try {
+    return JSON.parse(object);
+  } catch {
+    console.error("ytLazy: invalid JSON in data-yt attribute:", object);
+    return null;
+  }
+};
 
 /**
  * @returns red button

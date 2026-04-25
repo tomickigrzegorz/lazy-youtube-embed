@@ -1,11 +1,17 @@
+interface WatchInParams {
+  index: number;
+  link: string;
+  template: (template: string) => void;
+}
+
 interface ConstructorObject {
   background?: string;
   maxWidth?: number;
   overflow?: boolean;
   local?: boolean;
   picture?: boolean;
-  createWatchIn?: () => void;
-  onResize?: () => void;
+  createWatchIn?: (params: WatchInParams) => void;
+  onResize?: () => boolean | undefined;
 }
 
 interface ConfigObject {
@@ -19,5 +25,5 @@ interface LooseObject {
 
 interface lightboxObject {
   id: string;
-  maxWidth: string;
+  maxWidth?: number;
 }
