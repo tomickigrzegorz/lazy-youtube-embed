@@ -28,7 +28,7 @@ export default class ytLazy {
       picture = false,
       onResize = () => {},
       createWatchIn = () => {},
-    }: ConstructorObject
+    }: ConstructorObject = {}
   ) {
     this._className = classElement;
     this._background = background;
@@ -193,10 +193,7 @@ export default class ytLazy {
     window.addEventListener("click", this._handClick);
     window.addEventListener("keydown", this._handKey);
 
-    window.addEventListener(
-      "DOMContentLoaded",
-      () => (this._local = this._onResize())
-    );
+    this._local = this._onResize();
     window.addEventListener(
       "resize",
       debounce(() => (this._local = this._onResize()), 70)

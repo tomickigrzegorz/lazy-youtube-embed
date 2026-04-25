@@ -29,7 +29,14 @@ const setAttribute = (element: HTMLElement, config?: LooseObject) => {
 /**
  * @param object - object
  */
-const parseJson = (object: any) => JSON.parse(object);
+const parseJson = (object: any) => {
+  try {
+    return JSON.parse(object);
+  } catch {
+    console.error("ytLazy: invalid JSON in data-yt attribute:", object);
+    return {};
+  }
+};
 
 /**
  * @returns red button
