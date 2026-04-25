@@ -26,9 +26,9 @@ export default class ytLazy {
       overflow = false,
       local = true,
       picture = false,
-      onResize = () => {},
+      onResize = (): boolean | undefined => undefined,
       createWatchIn = () => {},
-    }: ConstructorObject = {}
+    }: ConstructorObject = {},
   ) {
     this._className = classElement;
     this._background = background;
@@ -51,9 +51,9 @@ export default class ytLazy {
     const getYTLazy = document.querySelectorAll(`.${this._className}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
-      const { id, openIn, title, picture } = parseJson(
-        getYTLazy[i].getAttribute("data-yt")
-      );
+      const parsed = parseJson(getYTLazy[i].getAttribute("data-yt"));
+      if (!parsed) continue;
+      const { id, openIn, title, picture } = parsed;
 
       // add image
       getYTLazy[i].appendChild(this._createImage(id, picture));
@@ -67,7 +67,7 @@ export default class ytLazy {
         getYTLazy[i].insertAdjacentElement("beforeend", titleElement);
         titleElement.insertAdjacentElement(
           "afterend",
-          createElement("div", "ytLazy__gradient-top")
+          createElement("div", "ytLazy__gradient-top"),
         );
       }
 
@@ -108,7 +108,7 @@ export default class ytLazy {
     ];
 
     const picture = createElement("picture");
-    sourcesArray.map((element: object) => {
+    sourcesArray.forEach((element: object) => {
       picture.appendChild(createElement("source", element));
     });
 
@@ -148,7 +148,9 @@ export default class ytLazy {
     if (element === null || !element.classList.contains(this._className))
       return;
 
-    const { id, local, maxWidth } = parseJson(element.getAttribute("data-yt"));
+    const parsed = parseJson(element.getAttribute("data-yt"));
+    if (!parsed) return;
+    const { id, local, maxWidth } = parsed;
 
     if (local ?? this._local) {
       const frame = createElement("iframe", this._objectIframe(id, this._link));
@@ -196,7 +198,7 @@ export default class ytLazy {
     this._local = this._onResize();
     window.addEventListener(
       "resize",
-      debounce(() => (this._local = this._onResize()), 70)
+      debounce(() => (this._local = this._onResize()), 70),
     );
   };
 
@@ -232,7 +234,7 @@ export default class ytLazy {
     const iframCointainer = createElement("div", "ytLight-iframe");
 
     iframCointainer.appendChild(
-      createElement("iframe", this._objectIframe(id, this._link))
+      createElement("iframe", this._objectIframe(id, this._link)),
     );
     container.appendChild(iframCointainer);
     wrap.appendChild(container);
