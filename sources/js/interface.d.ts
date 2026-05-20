@@ -19,11 +19,20 @@ interface ConfigObject {
   srcset: string;
 }
 
-interface LooseObject {
-  [key: string]: any;
+interface AttrMap {
+  [key: string]: string;
 }
 
-interface lightboxObject {
+interface LightboxObject {
   id: string;
   maxWidth?: number;
+  title?: string;
+}
+
+interface IframeAttrs extends AttrMap {
+  frameborder: string;
+  allowfullscreen: string;
+  allow: string;
+  src: string;
+  title: string;
 }

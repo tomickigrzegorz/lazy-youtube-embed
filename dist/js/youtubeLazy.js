@@ -9,11 +9,15 @@ var ytLazy = (function () {
         return element;
     };
     const setAttribute = (element, config) => {
-        for (var key in config) {
+        if (!config)
+            return;
+        for (const key in config) {
             element.setAttribute(key, config[key]);
         }
     };
     const parseJson = (object) => {
+        if (object == null)
+            return null;
         try {
             return JSON.parse(object);
         }
@@ -22,7 +26,11 @@ var ytLazy = (function () {
             return null;
         }
     };
-    const createRedButton = () => createElement("div", "ytLazy__img--svg");
+    const createRedButton = () => {
+        const el = createElement("div", "ytLazy__img--svg");
+        el.setAttribute("aria-hidden", "true");
+        return el;
+    };
     const debounce = (fn, ms = 300) => {
         let timeoutId;
         return function (...args) {
@@ -33,19 +41,28 @@ var ytLazy = (function () {
 
     class ytLazy {
         constructor(classElement, { background = "rgba(0,0,0,0.9)", maxWidth = 90, overflow = false, local = true, picture = false, onResize = () => undefined, createWatchIn = () => { }, } = {}) {
+            this._localOpenItems = new Map();
+            this._ownsOverlay = false;
+            this._lastOpener = null;
             this._initial = () => {
                 const getYTLazy = document.querySelectorAll(`.${this._className}`);
                 for (let i = 0; i < getYTLazy.length; i++) {
-                    const parsed = parseJson(getYTLazy[i].getAttribute("data-yt"));
+                    const item = getYTLazy[i];
+                    const parsed = parseJson(item.getAttribute("data-yt"));
                     if (!parsed)
                         continue;
                     const { id, openIn, title, picture } = parsed;
-                    getYTLazy[i].appendChild(this._createImage(id, picture));
-                    getYTLazy[i].appendChild(createRedButton());
-                    if (title !== null && title !== void 0 ? title : false) {
+                    setAttribute(item, {
+                        role: "button",
+                        tabindex: "0",
+                        "aria-label": title ? `Play video: ${title}` : "Play video",
+                    });
+                    item.appendChild(this._createImage(id, picture));
+                    item.appendChild(createRedButton());
+                    if (title) {
                         const titleElement = createElement("div", "ytLazy__title");
                         titleElement.textContent = title;
-                        getYTLazy[i].insertAdjacentElement("beforeend", titleElement);
+                        item.insertAdjacentElement("beforeend", titleElement);
                         titleElement.insertAdjacentElement("afterend", createElement("div", "ytLazy__gradient-top"));
                     }
                     if (openIn && this._createWatchIn) {
@@ -53,7 +70,7 @@ var ytLazy = (function () {
                             index: i,
                             link: this._link + "/watch?v=" + id,
                             template: (template) => {
-                                getYTLazy[i].insertAdjacentHTML("beforeend", template);
+                                item.insertAdjacentHTML("beforeend", template);
                             },
                         });
                     }
@@ -101,28 +118,51 @@ var ytLazy = (function () {
                 const parsed = parseJson(element.getAttribute("data-yt"));
                 if (!parsed)
                     return;
-                const { id, local, maxWidth } = parsed;
+                const { id, local, maxWidth, title } = parsed;
+                this._lastOpener = element;
                 if (local !== null && local !== void 0 ? local : this._local) {
-                    const frame = createElement("iframe", this._objectIframe(id, this._link));
+                    const frame = createElement("iframe", this._objectIframe(id, title));
                     setAttribute(frame, {
                         width: "100%",
                         height: "100%",
                     });
+                    if (!this._localOpenItems.has(element)) {
+                        this._localOpenItems.set(element, element.innerHTML);
+                    }
                     element.textContent = "";
                     element.appendChild(frame);
+                    element.classList.add("ytLazy-is-open-local");
+                    frame.focus();
                     return;
                 }
                 else {
-                    this._lightbox({ id, maxWidth });
+                    this._lightbox({ id, maxWidth, title });
                 }
             };
             this._closeLightbox = () => {
+                let wasOpen = false;
+                if (this._localOpenItems.size > 0) {
+                    this._localOpenItems.forEach((html, el) => {
+                        el.innerHTML = html;
+                        el.classList.remove("ytLazy-is-open-local");
+                    });
+                    this._localOpenItems.clear();
+                    wasOpen = true;
+                }
                 const isOpen = document.querySelector(".ytLazy-is-open");
-                if (!isOpen)
-                    return;
-                isOpen.textContent = "";
-                isOpen.classList.remove("ytLazy-is-open");
-                this._overflow && document.body.classList.remove("ytLight-active");
+                if (isOpen) {
+                    isOpen.textContent = "";
+                    isOpen.classList.remove("ytLazy-is-open");
+                    isOpen.removeAttribute("role");
+                    isOpen.removeAttribute("aria-modal");
+                    isOpen.removeAttribute("aria-label");
+                    this._overflow && document.body.classList.remove("ytLight-active");
+                    wasOpen = true;
+                }
+                if (wasOpen && this._lastOpener && document.contains(this._lastOpener)) {
+                    this._lastOpener.focus();
+                }
+                this._lastOpener = null;
             };
             this._handClick = (event) => {
                 event.stopPropagation();
@@ -131,26 +171,67 @@ var ytLazy = (function () {
                 this._setLightbox(target);
             };
             this._handKey = (event) => {
-                if (event.key !== "Escape")
+                if (event.key === "Escape") {
+                    this._closeLightbox();
                     return;
-                this._setLightbox(event.target);
-                this._closeLightbox();
+                }
+                if (event.key === "Enter" || event.key === " ") {
+                    const target = event.target;
+                    if (!target)
+                        return;
+                    const item = target.closest(".ytLazy__item");
+                    if (!item || !item.classList.contains(this._className))
+                        return;
+                    event.preventDefault();
+                    this._closeLightbox();
+                    this._setLightbox(target);
+                }
+            };
+            this._trapFocus = (event) => {
+                if (!this._overLayer.classList.contains("ytLazy-is-open"))
+                    return;
+                const target = event.target;
+                if (!target || this._overLayer.contains(target))
+                    return;
+                const closeBtn = this._overLayer.querySelector(".ytLight-close");
+                closeBtn === null || closeBtn === void 0 ? void 0 : closeBtn.focus();
             };
             this._handEvent = () => {
                 window.addEventListener("click", this._handClick);
                 window.addEventListener("keydown", this._handKey);
-                this._local = this._onResize();
-                window.addEventListener("resize", debounce(() => (this._local = this._onResize()), 70));
+                document.addEventListener("focusin", this._trapFocus);
+                this._applyResizeResult(this._onResize());
+                this._debouncedResize = debounce(() => this._applyResizeResult(this._onResize()), 70);
+                window.addEventListener("resize", this._debouncedResize);
             };
-            this._objectIframe = (id, link) => {
+            this._applyResizeResult = (result) => {
+                if (typeof result === "boolean") {
+                    this._local = result;
+                }
+            };
+            this._objectIframe = (id, title) => {
                 return {
                     frameborder: "0",
                     allowfullscreen: "true",
                     allow: "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;",
-                    src: `${link}/embed/${id}?autoplay=1`,
+                    src: `${this._link}/embed/${id}?autoplay=1`,
+                    title: title || "YouTube video player",
                 };
             };
-            this._lightbox = ({ id, maxWidth }) => {
+            this.destroy = () => {
+                window.removeEventListener("click", this._handClick);
+                window.removeEventListener("keydown", this._handKey);
+                document.removeEventListener("focusin", this._trapFocus);
+                if (this._debouncedResize) {
+                    window.removeEventListener("resize", this._debouncedResize);
+                    this._debouncedResize = undefined;
+                }
+                this._closeLightbox();
+                if (this._ownsOverlay && this._overLayer.parentNode) {
+                    this._overLayer.parentNode.removeChild(this._overLayer);
+                }
+            };
+            this._lightbox = ({ id, maxWidth, title }) => {
                 if (this._overflow) {
                     document.body.classList.add("ytLight-active");
                 }
@@ -158,6 +239,7 @@ var ytLazy = (function () {
                 setAttribute(button, {
                     type: "button",
                     title: "close movie",
+                    "aria-label": "Close video",
                 });
                 const wrap = createElement("div", "ytLight-wrap");
                 const container = createElement("div", "ytLight-container");
@@ -165,14 +247,20 @@ var ytLazy = (function () {
                     setAttribute(container, {
                         style: `max-width: ${maxWidth || this._maxWidth}%`,
                     });
-                const iframCointainer = createElement("div", "ytLight-iframe");
-                iframCointainer.appendChild(createElement("iframe", this._objectIframe(id, this._link)));
-                container.appendChild(iframCointainer);
+                const iframeContainer = createElement("div", "ytLight-iframe");
+                iframeContainer.appendChild(createElement("iframe", this._objectIframe(id, title)));
+                container.appendChild(iframeContainer);
                 wrap.appendChild(container);
-                iframCointainer.insertAdjacentElement("afterend", button);
+                iframeContainer.insertAdjacentElement("afterend", button);
                 this._overLayer.appendChild(wrap);
                 this._overLayer.classList.add("ytLazy-is-open");
-                this._overLayer.setAttribute("style", `background:${this._background};`);
+                setAttribute(this._overLayer, {
+                    style: `background:${this._background};`,
+                    role: "dialog",
+                    "aria-modal": "true",
+                    "aria-label": title || "Video player",
+                });
+                button.focus();
             };
             this._className = classElement;
             this._background = background;
@@ -183,8 +271,15 @@ var ytLazy = (function () {
             this._createWatchIn = createWatchIn;
             this._onResize = onResize;
             this._link = "https://www.youtube.com";
-            this._overLayer = createElement("div", "ytLight");
-            document.body.appendChild(this._overLayer);
+            const existingOverlay = document.querySelector("body > .ytLight");
+            if (existingOverlay) {
+                this._overLayer = existingOverlay;
+            }
+            else {
+                this._overLayer = createElement("div", "ytLight");
+                document.body.appendChild(this._overLayer);
+                this._ownsOverlay = true;
+            }
             this._initial();
         }
     }
