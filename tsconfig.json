@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["DOM", "ES2017"],
     "module": "ESNext",
     "strict": true,
     "importHelpers": true,
@@ -8,10 +10,6 @@
     "removeComments": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "sources/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["sources/**/*"],
+  "exclude": ["node_modules"]
 }

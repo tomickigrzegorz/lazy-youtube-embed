@@ -10,9 +10,14 @@ function updateVersion(file, newVersion) {
       return console.log(err);
     }
 
-    const matches = data.match(/\@(.*?)\/dist/i)[1];
+    const match = data.match(/@(.*?)\/dist/i);
+    if (!match) {
+      return console.log(
+        `version.js: no "@<version>/dist" pattern found in ${file}, skipping`,
+      );
+    }
 
-    const reg = new RegExp(matches.replace(/\./g, "\\."), "g");
+    const reg = new RegExp(match[1].replace(/\./g, "\\."), "g");
 
     const result = data.replace(reg, newVersion);
 

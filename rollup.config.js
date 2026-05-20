@@ -2,8 +2,7 @@ import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 import typescript from "@rollup/plugin-typescript";
 import cleanup from "rollup-plugin-cleanup";
-import { babel } from "@rollup/plugin-babel";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 
 import pkg from "./package.json";
 
@@ -11,11 +10,7 @@ const { PRODUCTION } = process.env;
 const input = "sources/js/index.ts";
 
 const sharedPlugins = (target) => {
-  return [
-    babel({ babelHelpers: "bundled" }),
-    typescript({ noEmitOnError: false, target }),
-    cleanup(),
-  ];
+  return [typescript({ noEmitOnError: false, target }), cleanup()];
 };
 
 const terserConfig = {

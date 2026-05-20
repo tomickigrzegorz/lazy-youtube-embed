@@ -15,8 +15,12 @@ export default class ytLazy {
   private _local?: boolean;
   private _overflow?: boolean;
   private _maxWidth?: number;
-  private _createWatchIn: Function;
-  private _onResize: Function;
+  private _createWatchIn: (params: WatchInParams) => void;
+  private _onResize: () => boolean | undefined;
+  private _localOpenItems: Map<Element, string> = new Map();
+  private _ownsOverlay = false;
+  private _debouncedResize?: (this: unknown) => void;
+  private _lastOpener: HTMLElement | null = null;
 
   constructor(
     classElement: string,
@@ -40,9 +44,15 @@ export default class ytLazy {
     this._onResize = onResize;
     this._link = "https://www.youtube.com";
 
-    this._overLayer = createElement("div", "ytLight");
-
-    document.body.appendChild(this._overLayer);
+    const existingOverlay =
+      document.querySelector<HTMLElement>("body > .ytLight");
+    if (existingOverlay) {
+      this._overLayer = existingOverlay;
+    } else {
+      this._overLayer = createElement("div", "ytLight");
+      document.body.appendChild(this._overLayer);
+      this._ownsOverlay = true;
+    }
 
     this._initial();
   }
@@ -51,20 +61,27 @@ export default class ytLazy {
     const getYTLazy = document.querySelectorAll(`.${this._className}`);
 
     for (let i = 0; i < getYTLazy.length; i++) {
-      const parsed = parseJson(getYTLazy[i].getAttribute("data-yt"));
+      const item = getYTLazy[i];
+      const parsed = parseJson(item.getAttribute("data-yt"));
       if (!parsed) continue;
       const { id, openIn, title, picture } = parsed;
 
+      setAttribute(item as HTMLElement, {
+        role: "button",
+        tabindex: "0",
+        "aria-label": title ? `Play video: ${title}` : "Play video",
+      });
+
       // add image
-      getYTLazy[i].appendChild(this._createImage(id, picture));
+      item.appendChild(this._createImage(id, picture));
 
       // add red button
-      getYTLazy[i].appendChild(createRedButton());
+      item.appendChild(createRedButton());
 
-      if (title ?? false) {
+      if (title) {
         const titleElement = createElement("div", "ytLazy__title");
         titleElement.textContent = title;
-        getYTLazy[i].insertAdjacentElement("beforeend", titleElement);
+        item.insertAdjacentElement("beforeend", titleElement);
         titleElement.insertAdjacentElement(
           "afterend",
           createElement("div", "ytLazy__gradient-top"),
@@ -76,7 +93,7 @@ export default class ytLazy {
           index: i,
           link: this._link + "/watch?v=" + id,
           template: (template: string) => {
-            getYTLazy[i].insertAdjacentHTML("beforeend", template);
+            item.insertAdjacentHTML("beforeend", template);
           },
         });
       }
@@ -108,8 +125,10 @@ export default class ytLazy {
     ];
 
     const picture = createElement("picture");
-    sourcesArray.forEach((element: object) => {
-      picture.appendChild(createElement("source", element));
+    sourcesArray.forEach((element) => {
+      picture.appendChild(
+        createElement("source", element as unknown as AttrMap),
+      );
     });
 
     const image = new Image();
@@ -143,38 +162,66 @@ export default class ytLazy {
     const watchIn = target.closest(".ytLazy__watch-in-link");
     if (watchIn) return;
 
-    const element = target.closest(".ytLazy__item");
+    const element = target.closest<HTMLElement>(".ytLazy__item");
 
     if (element === null || !element.classList.contains(this._className))
       return;
 
     const parsed = parseJson(element.getAttribute("data-yt"));
     if (!parsed) return;
-    const { id, local, maxWidth } = parsed;
+    const { id, local, maxWidth, title } = parsed;
+
+    this._lastOpener = element;
 
     if (local ?? this._local) {
-      const frame = createElement("iframe", this._objectIframe(id, this._link));
+      const frame = createElement("iframe", this._objectIframe(id, title));
       setAttribute(frame, {
         width: "100%",
         height: "100%",
       });
 
+      if (!this._localOpenItems.has(element)) {
+        this._localOpenItems.set(element, element.innerHTML);
+      }
       element.textContent = "";
       element.appendChild(frame);
+      element.classList.add("ytLazy-is-open-local");
+      (frame as HTMLIFrameElement).focus();
 
       return;
     } else {
-      this._lightbox({ id, maxWidth });
+      this._lightbox({ id, maxWidth, title });
     }
   };
 
   // close lightbox
   _closeLightbox = () => {
+    let wasOpen = false;
+
+    if (this._localOpenItems.size > 0) {
+      this._localOpenItems.forEach((html, el) => {
+        el.innerHTML = html;
+        el.classList.remove("ytLazy-is-open-local");
+      });
+      this._localOpenItems.clear();
+      wasOpen = true;
+    }
+
     const isOpen = document.querySelector(".ytLazy-is-open");
-    if (!isOpen) return;
-    isOpen.textContent = "";
-    isOpen.classList.remove("ytLazy-is-open");
-    this._overflow && document.body.classList.remove("ytLight-active");
+    if (isOpen) {
+      isOpen.textContent = "";
+      isOpen.classList.remove("ytLazy-is-open");
+      isOpen.removeAttribute("role");
+      isOpen.removeAttribute("aria-modal");
+      isOpen.removeAttribute("aria-label");
+      this._overflow && document.body.classList.remove("ytLight-active");
+      wasOpen = true;
+    }
+
+    if (wasOpen && this._lastOpener && document.contains(this._lastOpener)) {
+      this._lastOpener.focus();
+    }
+    this._lastOpener = null;
   };
 
   _handClick = (event: Event) => {
@@ -186,33 +233,81 @@ export default class ytLazy {
   };
 
   _handKey = (event: KeyboardEvent) => {
-    if (event.key !== "Escape") return;
-    this._setLightbox(<HTMLElement>event.target);
-    this._closeLightbox();
+    if (event.key === "Escape") {
+      this._closeLightbox();
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      const item = target.closest<HTMLElement>(".ytLazy__item");
+      if (!item || !item.classList.contains(this._className)) return;
+      event.preventDefault();
+      this._closeLightbox();
+      this._setLightbox(target);
+    }
+  };
+
+  _trapFocus = (event: FocusEvent) => {
+    if (!this._overLayer.classList.contains("ytLazy-is-open")) return;
+    const target = event.target as Node | null;
+    if (!target || this._overLayer.contains(target)) return;
+    const closeBtn =
+      this._overLayer.querySelector<HTMLElement>(".ytLight-close");
+    closeBtn?.focus();
   };
 
   _handEvent = () => {
     window.addEventListener("click", this._handClick);
     window.addEventListener("keydown", this._handKey);
+    document.addEventListener("focusin", this._trapFocus);
 
-    this._local = this._onResize();
-    window.addEventListener(
-      "resize",
-      debounce(() => (this._local = this._onResize()), 70),
+    this._applyResizeResult(this._onResize());
+    this._debouncedResize = debounce(
+      () => this._applyResizeResult(this._onResize()),
+      70,
     );
+    window.addEventListener("resize", this._debouncedResize as EventListener);
   };
 
-  _objectIframe = (id: string, link: string): object => {
+  _applyResizeResult = (result: unknown) => {
+    if (typeof result === "boolean") {
+      this._local = result;
+    }
+  };
+
+  _objectIframe = (id: string, title?: string): IframeAttrs => {
     return {
       frameborder: "0",
       allowfullscreen: "true",
       allow:
         "accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture;",
-      src: `${link}/embed/${id}?autoplay=1`,
+      src: `${this._link}/embed/${id}?autoplay=1`,
+      title: title || "YouTube video player",
     };
   };
 
-  _lightbox = ({ id, maxWidth }: lightboxObject) => {
+  destroy = () => {
+    window.removeEventListener("click", this._handClick);
+    window.removeEventListener("keydown", this._handKey);
+    document.removeEventListener("focusin", this._trapFocus);
+    if (this._debouncedResize) {
+      window.removeEventListener(
+        "resize",
+        this._debouncedResize as EventListener,
+      );
+      this._debouncedResize = undefined;
+    }
+
+    this._closeLightbox();
+
+    if (this._ownsOverlay && this._overLayer.parentNode) {
+      this._overLayer.parentNode.removeChild(this._overLayer);
+    }
+  };
+
+  _lightbox = ({ id, maxWidth, title }: LightboxObject) => {
     if (this._overflow) {
       document.body.classList.add("ytLight-active");
     }
@@ -221,6 +316,7 @@ export default class ytLazy {
     setAttribute(button, {
       type: "button",
       title: "close movie",
+      "aria-label": "Close video",
     });
 
     const wrap = createElement("div", "ytLight-wrap");
@@ -231,18 +327,25 @@ export default class ytLazy {
         style: `max-width: ${maxWidth || this._maxWidth}%`,
       });
 
-    const iframCointainer = createElement("div", "ytLight-iframe");
+    const iframeContainer = createElement("div", "ytLight-iframe");
 
-    iframCointainer.appendChild(
-      createElement("iframe", this._objectIframe(id, this._link)),
+    iframeContainer.appendChild(
+      createElement("iframe", this._objectIframe(id, title)),
     );
-    container.appendChild(iframCointainer);
+    container.appendChild(iframeContainer);
     wrap.appendChild(container);
 
-    iframCointainer.insertAdjacentElement("afterend", button);
+    iframeContainer.insertAdjacentElement("afterend", button);
 
     this._overLayer.appendChild(wrap);
     this._overLayer.classList.add("ytLazy-is-open");
-    this._overLayer.setAttribute("style", `background:${this._background};`);
+    setAttribute(this._overLayer, {
+      style: `background:${this._background};`,
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-label": title || "Video player",
+    });
+
+    (button as HTMLButtonElement).focus();
   };
 }
