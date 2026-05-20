@@ -22,7 +22,7 @@
 
 See the demo - [example](https://tomickigrzegorz.github.io/lazy-youtube-embed/)
 
-> close the lightbox by pressing the ESC key
+> Keyboard support: focus a thumbnail with <kbd>Tab</kbd>, activate it with <kbd>Enter</kbd> or <kbd>Space</kbd>, close the lightbox with <kbd>Esc</kbd>.
 
 ## How to configure it?
 
@@ -39,10 +39,10 @@ See the demo - [example](https://tomickigrzegorz.github.io/lazy-youtube-embed/)
 #### You can download from CDN as well
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.7/dist/css/youtubeLazy.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.8/dist/css/youtubeLazy.min.css"/>
 
 <!-- JS -->
-<script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.7/dist/js/youtubeLazy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.8/dist/js/youtubeLazy.min.js"></script>
 ```
 
 
@@ -151,17 +151,31 @@ See the demo - [example](https://tomickigrzegorz.github.io/lazy-youtube-embed/)
 </script>
 ```
 
+### Tearing down
+
+The instance exposes a `destroy()` method that removes all listeners
+(`click`, `keydown`, `focusin`, debounced `resize`), closes any open
+lightbox, and removes the overlay if this instance created it. Useful
+for SPA route changes or CMS re-renders.
+
+```js
+const yt = new ytLazy('ytLazy__item');
+// later...
+yt.destroy();
+```
+
 ## Browser support
 
 youtubeLazy supports all major browsers including IE 11 and above.
 
-If you need IE support, add this pollyfil to html
+If you need IE support, add this polyfill to html. Since 1.1.8 the
+library uses a native `Map`, so include it in the requested features:
 
 ```html
 <script type="text/javascript">
   if (window.Element && !Element.prototype.closest) {
     var script = document.createElement('script');
-    script.src = 'https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.closest';
+    script.src = 'https://polyfill.io/v3/polyfill.min.js?features=Element.prototype.closest,Map';
     document.getElementsByTagName('head')[0].appendChild(script);
   }
 </script>
@@ -174,8 +188,8 @@ If you need IE support, add this pollyfil to html
 
 ### cdn
 
-- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.7/dist/js/youtubeLazy.ie.min.js
-- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.7/dist/css/youtubeLazy.ie.min.css
+- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.8/dist/js/youtubeLazy.ie.min.js
+- https://cdn.jsdelivr.net/gh/tomickigrzegorz/lazy-youtube-embed@1.1.8/dist/css/youtubeLazy.ie.min.css
 
 ## License
 
